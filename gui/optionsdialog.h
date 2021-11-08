@@ -55,10 +55,11 @@ private slots:
     void removeManufacturerHandler();
 
     bool message(const QString &msg);
-
+    void browseFile();
     void updateInterface();
     
 private:
+
     Ui::OptionsDialog *ui;
 
     pMiniTableWidget *m_containerTable;

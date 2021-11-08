@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QListWidgetItem>
 #include <QMessageBox>
 #include <QSettings>
+#include <QFileDialog>
 
 #include <QDebug>
 
@@ -84,6 +85,10 @@ void OptionsDialog::setup()
     QListWidgetItem *manufacturers = new QListWidgetItem(tr("Manufacturers"));
     manufacturers->setIcon(QIcon(":/img/manufacturer.png"));
     ui->options_listWidget->addItem(manufacturers);
+
+    QListWidgetItem *product = new QListWidgetItem(tr("Product"));
+    product->setIcon(QIcon(":/img/page_white_text.png"));
+    ui->options_listWidget->addItem(product);
 
     m_containerTable = new pMiniTableWidget(this);
     m_containerTable->setMaximumWidth(ColumnMaxWidth);
@@ -161,6 +166,8 @@ void OptionsDialog::setup()
     connect(ui->removeManufacturer_toolButton, SIGNAL(clicked()), this, SLOT(removeManufacturerHandler()));
     connect(ui->manufacturer_lineEdit, SIGNAL(textChanged(QString)), this, SLOT(updateInterface()));
     connect(m_manufacturerTable, SIGNAL(itemSelectionChanged()), this, SLOT(updateInterface()));
+
+    connect(ui->PoductOpenFile_pushButton, SIGNAL(clicked()), this, SLOT(browseFile()));
 
     updateInterface();
 }
@@ -494,4 +501,18 @@ void OptionsDialog::updateInterface()
         ui->removeManufacturer_toolButton->setEnabled(false);
     else
         ui->removeManufacturer_toolButton->setEnabled(true);
+}
+
+
+void OptionsDialog::browseFile()
+{
+    QString filePath = QFileDialog::getOpenFileName(this,
+                                                    tr("Select BOM File"),
+                                                    "",
+                                                    tr("BOM (*.txt)"));
+
+    if(!filePath.isNull())
+        ui->PoductFileAdr_lineEdit->setText(filePath);
+    else
+        ui->PoductFileAdr_lineEdit->setText("");
 }

@@ -49,7 +49,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>0</number>
+          <number>5</number>
          </property>
          <widget class="QWidget" name="page">
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -512,6 +512,83 @@
             </layout>
            </item>
           </layout>
+         </widget>
+         <widget class="QWidget" name="Product">
+          <widget class="QPushButton" name="PoductCheck_pushButton">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>140</y>
+             <width>75</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Check</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="PoductReduce_pushButton">
+           <property name="geometry">
+            <rect>
+             <x>80</x>
+             <y>140</y>
+             <width>75</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Reduce</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="PoductAdd_pushButton">
+           <property name="geometry">
+            <rect>
+             <x>160</x>
+             <y>140</y>
+             <width>75</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Add</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label">
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>80</y>
+             <width>111</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Test Coskun </string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="PoductOpenFile_pushButton">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>30</y>
+             <width>75</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Open File</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="PoductFileAdr_lineEdit">
+           <property name="geometry">
+            <rect>
+             <x>80</x>
+             <y>30</y>
+             <width>151</width>
+             <height>20</height>
+            </rect>
+           </property>
+          </widget>
          </widget>
         </widget>
        </item>
