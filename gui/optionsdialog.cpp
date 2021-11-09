@@ -589,9 +589,19 @@ void OptionsDialog::browseFile()
     }
 }
 
+QString StockNo = "130000003";
+
 void OptionsDialog::CheckBOM()
 {
-    ui->ProductInfo_textEdit->setText("Check done..\r\n");
+    ui->ProductInfo_textEdit->setText("Checking..\r\n");
+    foreach(QString name, m_co->componentNames())
+    {
+        if(name == StockNo)
+        {
+            ui->ProductInfo_textEdit->setText("Check done..\r\n");
+            break;
+        }
+    }
 }
 
 void OptionsDialog::ReduceBOM()
