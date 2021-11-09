@@ -16,6 +16,8 @@
 
 QT       += core gui
 
+CONFIG += qaxcontainer
+
 win32:TARGET = comporg_win
 unix:TARGET = comporg_unix
 TEMPLATE = app

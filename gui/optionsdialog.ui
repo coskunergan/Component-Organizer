@@ -373,6 +373,9 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="layoutDirection">
+                   <enum>Qt::LeftToRight</enum>
+                  </property>
                  </widget>
                 </item>
                 <item>
@@ -515,6 +518,9 @@
          </widget>
          <widget class="QWidget" name="Product">
           <widget class="QPushButton" name="PoductCheck_pushButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>0</x>
@@ -528,6 +534,9 @@
            </property>
           </widget>
           <widget class="QPushButton" name="PoductReduce_pushButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>80</x>
@@ -541,6 +550,9 @@
            </property>
           </widget>
           <widget class="QPushButton" name="PoductAdd_pushButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>160</x>
@@ -556,37 +568,85 @@
           <widget class="QLabel" name="label">
            <property name="geometry">
             <rect>
-             <x>90</x>
-             <y>80</y>
-             <width>111</width>
+             <x>69</x>
+             <y>43</y>
+             <width>61</width>
              <height>16</height>
             </rect>
            </property>
            <property name="text">
-            <string>Test Coskun </string>
+            <string>BOM Count:</string>
            </property>
           </widget>
           <widget class="QPushButton" name="PoductOpenFile_pushButton">
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>30</y>
+             <y>10</y>
              <width>75</width>
              <height>23</height>
             </rect>
            </property>
            <property name="text">
-            <string>Open File</string>
+            <string>Open BOM</string>
            </property>
           </widget>
           <widget class="QLineEdit" name="PoductFileAdr_lineEdit">
            <property name="geometry">
             <rect>
              <x>80</x>
-             <y>30</y>
+             <y>10</y>
              <width>151</width>
              <height>20</height>
             </rect>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QTextEdit" name="ProductInfo_textEdit">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>70</y>
+             <width>241</width>
+             <height>61</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="lineEdit">
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>40</y>
+             <width>61</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="inputMethodHints">
+            <set>Qt::ImhDigitsOnly</set>
+           </property>
+           <property name="text">
+            <string notr="true">0</string>
+           </property>
+           <property name="maxLength">
+            <number>5</number>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButton">
+           <property name="geometry">
+            <rect>
+             <x>200</x>
+             <y>40</y>
+             <width>41</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Max</string>
            </property>
           </widget>
          </widget>

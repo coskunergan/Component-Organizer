@@ -56,6 +56,9 @@ private slots:
 
     bool message(const QString &msg);
     void browseFile();
+    void CheckBOM();
+    void ReduceBOM();
+    void AddBOM();
     void updateInterface();
     
 private:

@@ -36,6 +36,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDebug>
 
+#include <QAxObject>
+
 OptionsDialog::OptionsDialog(CO *co, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::OptionsDialog),
@@ -168,6 +170,10 @@ void OptionsDialog::setup()
     connect(m_manufacturerTable, SIGNAL(itemSelectionChanged()), this, SLOT(updateInterface()));
 
     connect(ui->PoductOpenFile_pushButton, SIGNAL(clicked()), this, SLOT(browseFile()));
+
+    connect(ui->PoductCheck_pushButton, SIGNAL(clicked()), this, SLOT(CheckBOM()));
+    connect(ui->PoductReduce_pushButton, SIGNAL(clicked()), this, SLOT(ReduceBOM()));
+    connect(ui->PoductAdd_pushButton, SIGNAL(clicked()), this, SLOT(AddBOM()));
 
     updateInterface();
 }
@@ -503,16 +509,97 @@ void OptionsDialog::updateInterface()
         ui->removeManufacturer_toolButton->setEnabled(true);
 }
 
-
 void OptionsDialog::browseFile()
 {
-    QString filePath = QFileDialog::getOpenFileName(this,
-                                                    tr("Select BOM File"),
-                                                    "",
-                                                    tr("BOM (*.txt)"));
+    QString filePath = QFileDialog::getOpenFileName(this,tr("Select Excel BOM File"),"",tr("BOM (*.xls)"));
 
     if(!filePath.isNull())
+    {
+
+        QAxObject* excel = new QAxObject( "Excel.Application", 0 );
+        QAxObject* workbooks = excel->querySubObject( "Workbooks" );
+        QAxObject* workbook = workbooks->querySubObject( "Open(const QString&)", filePath );
+        QAxObject* sheets = workbook->querySubObject( "Worksheets" );
+        QList<QVariantList> data; //Data list from excel, each QVariantList is worksheet row
+
+        //worksheets count
+        int count = sheets->dynamicCall("Count()").toInt();
+
+        count = sheets->property("Count").toInt();
+
+        count = 1; // only first sheet!
+
+        for (int i=1; i<=count; i++) //cycle through sheets
+         {
+            //sheet pointer
+            QAxObject* sheet = sheets->querySubObject( "Item( int )", i );
+
+            QAxObject* rows = sheet->querySubObject( "Rows" );
+            int rowCount = rows->dynamicCall( "Count()" ).toInt(); //unfortunately, always returns 255, so you have to check somehow validity of cell values
+            QAxObject* columns = sheet->querySubObject( "Columns" );
+            int columnCount = columns->property("Count").toInt();
+            rowCount=256;
+            columnCount=3;
+            for (int row=1; row <= rowCount; row++)
+            {
+                QVariantList dataRow;
+
+                bool isEmpty = true; //when all the cells of row are empty, it means that file is at end (of course, it maybe not right for different excel files. it's just criteria to calculate somehow row count for my file)
+                for (int column=1; column <= columnCount; column++)
+                {
+                     QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,column);
+                     QString value = cell->dynamicCall("Value()").toString();
+
+                     ui->ProductInfo_textEdit->append(value);
+
+                     if(value != "")
+                     {
+                         isEmpty = false;
+                     }
+                     //dataRow[column].toList()
+                    //ui->ProductInfo_textEdit->append(value.toString());
+                    //Do something usefule here
+                }
+                if (isEmpty) //criteria to get out of cycle
+                    break;
+                data.append(dataRow);
+            }
+        }
+
+        //ui->ProductInfo_textEdit->append("column="+ QString::number(columnCount));
+        //ui->ProductInfo_textEdit->append("row="+ QString::number(rowCount));
+        ui->ProductInfo_textEdit->append("sheet="+ QString::number(count));
+
+
+        workbook->dynamicCall("Close()");
+        excel->dynamicCall("Quit()");
+
+
         ui->PoductFileAdr_lineEdit->setText(filePath);
+        ui->PoductAdd_pushButton->setEnabled(true);
+        ui->PoductCheck_pushButton->setEnabled(true);
+        ui->PoductReduce_pushButton->setEnabled(true);
+    }
     else
+    {
         ui->PoductFileAdr_lineEdit->setText("");
+        ui->PoductAdd_pushButton->setEnabled(false);
+        ui->PoductCheck_pushButton->setEnabled(false);
+        ui->PoductReduce_pushButton->setEnabled(false);
+    }
+}
+
+void OptionsDialog::CheckBOM()
+{
+    ui->ProductInfo_textEdit->setText("Check done..\r\n");
+}
+
+void OptionsDialog::ReduceBOM()
+{
+    ui->ProductInfo_textEdit->setText("Reduce done..\r\n");
+}
+
+void OptionsDialog::AddBOM()
+{
+    ui->ProductInfo_textEdit->setText("Add done..\r\n");
 }
