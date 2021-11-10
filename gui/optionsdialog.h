@@ -60,6 +60,7 @@ private slots:
     void ReduceBOM();
     void AddBOM();
     void MaximumBOMCalc();
+    void CheckRequest();
     void updateInterface();
     
 private:

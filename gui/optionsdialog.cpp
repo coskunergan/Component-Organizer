@@ -29,8 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mainwindow.h"
 
-
-
 #include "componentdialog.h"
 #include "componentdetails.h"
 #include "ui_componentdialog.h"
@@ -99,7 +97,7 @@ void OptionsDialog::setup()
     ui->options_listWidget->addItem(manufacturers);
 
     QListWidgetItem *product = new QListWidgetItem(tr("Product"));
-    product->setIcon(QIcon(":/img/page_white_text.png"));
+    product->setIcon(QIcon(":/img/chip.png"));
     ui->options_listWidget->addItem(product);
 
     m_containerTable = new pMiniTableWidget(this);
@@ -185,6 +183,8 @@ void OptionsDialog::setup()
     connect(ui->PoductReduce_pushButton, SIGNAL(clicked()), this, SLOT(ReduceBOM()));
     connect(ui->PoductAdd_pushButton, SIGNAL(clicked()), this, SLOT(AddBOM()));
     connect(ui->PoductMax_pushButton, SIGNAL(clicked()), this, SLOT(MaximumBOMCalc()));
+
+    connect(ui->ProductBOMCount_spinBox, SIGNAL(valueChanged(int)), this, SLOT(CheckRequest()));
 
     updateInterface();
 }
@@ -524,20 +524,16 @@ QString filePath;
 
 void OptionsDialog::browseFile()
 {
-    filePath = QFileDialog::getOpenFileName(this,tr("Select Excel BOM File"),"",tr("BOM (*.xlsx)"));
+    filePath = QFileDialog::getOpenFileName(this,tr("Select Excel BOM File"),"",tr("BOM (*.xlsx *.xls)"));
 
     if(!filePath.isNull())
     {
-        ui->ProductInfo_textEdit->setText("File selected..");
         ui->PoductFileAdr_lineEdit->setText(filePath);
-        ui->PoductAdd_pushButton->setEnabled(false);
-        ui->PoductCheck_pushButton->setEnabled(true);
-        ui->PoductMax_pushButton->setEnabled(true);
-        ui->PoductReduce_pushButton->setEnabled(false);        
+        CheckBOM();       
     }
     else
     {
-        ui->ProductInfo_textEdit->setText("No File selected..");
+        ui->ProductInfo_textEdit->setText("No file selected..");
         ui->PoductFileAdr_lineEdit->setText("");
         ui->PoductAdd_pushButton->setEnabled(false);
         ui->PoductCheck_pushButton->setEnabled(false);
@@ -563,7 +559,7 @@ void OptionsDialog::CheckBOM()
     ui->PoductMax_pushButton->setEnabled(false); 
     qApp->processEvents();  
 
-    ui->ProductInfo_textEdit->setText("File Open..\r\n");
+    ui->ProductInfo_textEdit->setText("File reading..\r\n");
 
     QAxObject* excel = new QAxObject( "Excel.Application", 0 );
     QAxObject* workbooks = excel->querySubObject( "Workbooks" );
@@ -571,12 +567,13 @@ void OptionsDialog::CheckBOM()
     QAxObject* sheets = workbook->querySubObject( "Worksheets" );
     QAxObject* sheet = sheets->querySubObject( "Item( int )", 1 );
 
-    bool FindStock = false;
+    bool FindComponentError = false;
     bool ReduceStockError = false;
     bool AddStockError = false;
     int instock = 0;
+    int ComponentCount = 0;
 
-    for (int row=2; row <= 256; row++)
+    for (int row=2; row <= 999; row++)
     {        
         //------------- StockNo Find --------------
         QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,1);
@@ -584,23 +581,21 @@ void OptionsDialog::CheckBOM()
         cell = sheet->querySubObject("Cells(int,int)",row,2);
         int CountNumber = cell->dynamicCall("Value()").toInt() * BOMCount;         
         cell = sheet->querySubObject("Cells(int,int)",row,3);
-        QString Designator= cell->dynamicCall("Value()").toString();        
+        QString Designator= cell->dynamicCall("Value()").toString();                
+        
+        FindComponentError=true;  
 
         if(StockNo == "" || CountNumber == 0 || Designator == "")
-        {
-            if(FindStock == true)
-            {
-                ui->ProductInfo_textEdit->append("Has a Enough Stock.");
-                ui->ProductInfo_textEdit->append("Cheking Done...");
-            }
+        {            
             break;
-        }        
-        FindStock = false;
+        }           
+
         foreach(QString name, m_co->componentNames())
         {            
             if(name == StockNo)
             {
-                FindStock=true;                
+                FindComponentError=false;  
+                ComponentCount++;              
                 foreach(Component *c, m_co->components())
                 {
                     if(c->name() == name)
@@ -619,9 +614,9 @@ void OptionsDialog::CheckBOM()
                 }
                 break;
             }
-        }
+        }      
         //----------------- Count Check ---------------
-        if(FindStock == false)
+        if(FindComponentError == true)
         {
             ReduceStockError = true;
             AddStockError = true;
@@ -640,7 +635,7 @@ void OptionsDialog::CheckBOM()
                 ui->ProductInfo_textEdit->append("Low Stock: " + StockNo  + " => " + Designator + "(-" + QString::number(CountNumber - instock) + ")");
             }
         }
-        //---------------------------------------------
+        //---------------------------------------------          
     }
     workbook->dynamicCall("Close()");
     excel->dynamicCall("Quit()");
@@ -654,6 +649,11 @@ void OptionsDialog::CheckBOM()
     {
         ui->PoductAdd_pushButton->setEnabled(true);        
     }
+    if(ComponentCount && AddStockError == false && ReduceStockError == false)
+    {
+        ui->ProductInfo_textEdit->append("Has a enough stock.");        
+    }    
+    ui->ProductInfo_textEdit->append("\r\nCheking done...");
 }
 
 void OptionsDialog::ReduceBOM()
@@ -704,7 +704,7 @@ void OptionsDialog::ReduceBOM()
         {
             if(FindStock == true)
             {
-                ui->ProductInfo_textEdit->append("Reduce Done...");
+                ui->ProductInfo_textEdit->append("Reduce done...");
             }
             break;
         }        
@@ -722,8 +722,9 @@ void OptionsDialog::ReduceBOM()
                         {
                             Stock *s = c->stock(p->name());
                             if(s)
-                            {
+                            {                                
                                 s->setStock(s->stock() - CountNumber);                                             
+                                c->setTotalStock(c->totalStock() - CountNumber);
                                 break;
                             }
                         }                         
@@ -790,7 +791,7 @@ void OptionsDialog::AddBOM()
         {
             if(FindStock == true)
             {
-                ui->ProductInfo_textEdit->append("Add Done...");
+                ui->ProductInfo_textEdit->append("Add done...");
             }
             break;
         }        
@@ -830,14 +831,14 @@ void OptionsDialog::AddBOM()
 
 void OptionsDialog::MaximumBOMCalc()
 {    
-    ui->ProductInfo_textEdit->setText("Calculate please wait..");
     ui->PoductAdd_pushButton->setEnabled(false);
     ui->PoductCheck_pushButton->setEnabled(false);
     ui->PoductReduce_pushButton->setEnabled(false);   
-    ui->PoductMax_pushButton->setEnabled(false); 
-    qApp->processEvents();  
+    ui->PoductMax_pushButton->setEnabled(false);     
 
-    ui->ProductInfo_textEdit->setText("File Open..\r\n");
+    ui->ProductInfo_textEdit->setText("Calculating..\r\n");
+
+    qApp->processEvents();  
 
     QAxObject* excel = new QAxObject( "Excel.Application", 0 );
     QAxObject* workbooks = excel->querySubObject( "Workbooks" );
@@ -851,7 +852,7 @@ void OptionsDialog::MaximumBOMCalc()
     int instock;
     int BOMCount = 1;
 
-    while(BOMCount < 1000)
+    while(BOMCount < 99999)
     {
         FindStock = false;
         ReduceStockError = false;
@@ -913,6 +914,7 @@ void OptionsDialog::MaximumBOMCalc()
                 }
                 else
                 {
+                    ui->ProductBOMCount_spinBox->setValue(BOMCount);  
                     BOMCount++;
                 }
             }
@@ -924,13 +926,11 @@ void OptionsDialog::MaximumBOMCalc()
         }
     }
     workbook->dynamicCall("Close()");
-    excel->dynamicCall("Quit()");
-    ui->ProductBOMCount_spinBox->setValue(BOMCount - 1);    
-    ui->PoductCheck_pushButton->setEnabled(true);  
-    ui->PoductMax_pushButton->setEnabled(true);    
-    if(BOMCount > 1 && AddStockError == false)
-    {       
-        ui->ProductInfo_textEdit->append("Calculate Done...");             
-        ui->PoductReduce_pushButton->setEnabled(true);      
-    }    
+    excel->dynamicCall("Quit()");      
+    CheckBOM();   
+}
+
+void OptionsDialog::CheckRequest()
+{
+    ui->PoductReduce_pushButton->setEnabled(false);   
 }
