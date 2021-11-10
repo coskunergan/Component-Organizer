@@ -50,6 +50,7 @@ public:
 
     void removeManufacturer(const QString &name);
     void removePackage(const QString &name);
+    QList<Package *> getPackages();
     void removeContainer(const QString &name);
     void removeLabel(const QString &name);
     void removeComponent(Component *component);

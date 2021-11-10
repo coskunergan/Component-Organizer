@@ -274,6 +274,11 @@ void CO::removePackage(const QString &name)
         }
 }
 
+QList<Package *> CO::getPackages()
+{            
+    return m_packages;     
+}
+
 void CO::removeContainer(const QString &name)
 {
     for(int i = 0; i < m_containers.count(); i++)

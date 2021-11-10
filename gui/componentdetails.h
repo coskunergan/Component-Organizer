@@ -37,18 +37,17 @@ class ComponentDetails : public QDialog
     
 public:
     explicit ComponentDetails(CO *co, Component *component = 0, QWidget *parent = 0);
-    ~ComponentDetails();
+    ~ComponentDetails();        
 
-protected:
-    void accept();
+protected:    
     void closeEvent(QCloseEvent *);
 
 private slots:
-    void viewDatasheetHandler();
+    void viewDatasheetHandler();      
     void updateStockTable();
     
 private:
-
+    void accept();
     void setup();
 
     Ui::ComponentDetails *ui;

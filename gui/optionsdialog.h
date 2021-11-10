@@ -59,6 +59,7 @@ private slots:
     void CheckBOM();
     void ReduceBOM();
     void AddBOM();
+    void MaximumBOMCalc();
     void updateInterface();
     
 private:
