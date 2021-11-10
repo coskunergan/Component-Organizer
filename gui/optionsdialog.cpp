@@ -29,6 +29,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mainwindow.h"
 
+
+
+#include "componentdialog.h"
+#include "ui_componentdialog.h"
+
+#include "co_defs.h"
+#include "stock.h"
+#include "stocktable.h"
+
 #include <QListWidgetItem>
 #include <QMessageBox>
 #include <QSettings>
@@ -509,72 +518,14 @@ void OptionsDialog::updateInterface()
         ui->removeManufacturer_toolButton->setEnabled(true);
 }
 
+QString filePath;
+
 void OptionsDialog::browseFile()
 {
-    QString filePath = QFileDialog::getOpenFileName(this,tr("Select Excel BOM File"),"",tr("BOM (*.xls)"));
+    filePath = QFileDialog::getOpenFileName(this,tr("Select Excel BOM File"),"",tr("BOM (*.xlsx)"));
 
     if(!filePath.isNull())
     {
-
-        QAxObject* excel = new QAxObject( "Excel.Application", 0 );
-        QAxObject* workbooks = excel->querySubObject( "Workbooks" );
-        QAxObject* workbook = workbooks->querySubObject( "Open(const QString&)", filePath );
-        QAxObject* sheets = workbook->querySubObject( "Worksheets" );
-        QList<QVariantList> data; //Data list from excel, each QVariantList is worksheet row
-
-        //worksheets count
-        int count = sheets->dynamicCall("Count()").toInt();
-
-        count = sheets->property("Count").toInt();
-
-        count = 1; // only first sheet!
-
-        for (int i=1; i<=count; i++) //cycle through sheets
-         {
-            //sheet pointer
-            QAxObject* sheet = sheets->querySubObject( "Item( int )", i );
-
-            QAxObject* rows = sheet->querySubObject( "Rows" );
-            int rowCount = rows->dynamicCall( "Count()" ).toInt(); //unfortunately, always returns 255, so you have to check somehow validity of cell values
-            QAxObject* columns = sheet->querySubObject( "Columns" );
-            int columnCount = columns->property("Count").toInt();
-            rowCount=256;
-            columnCount=3;
-            for (int row=1; row <= rowCount; row++)
-            {
-                QVariantList dataRow;
-
-                bool isEmpty = true; //when all the cells of row are empty, it means that file is at end (of course, it maybe not right for different excel files. it's just criteria to calculate somehow row count for my file)
-                for (int column=1; column <= columnCount; column++)
-                {
-                     QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,column);
-                     QString value = cell->dynamicCall("Value()").toString();
-
-                     ui->ProductInfo_textEdit->append(value);
-
-                     if(value != "")
-                     {
-                         isEmpty = false;
-                     }
-                     //dataRow[column].toList()
-                    //ui->ProductInfo_textEdit->append(value.toString());
-                    //Do something usefule here
-                }
-                if (isEmpty) //criteria to get out of cycle
-                    break;
-                data.append(dataRow);
-            }
-        }
-
-        //ui->ProductInfo_textEdit->append("column="+ QString::number(columnCount));
-        //ui->ProductInfo_textEdit->append("row="+ QString::number(rowCount));
-        ui->ProductInfo_textEdit->append("sheet="+ QString::number(count));
-
-
-        workbook->dynamicCall("Close()");
-        excel->dynamicCall("Quit()");
-
-
         ui->PoductFileAdr_lineEdit->setText(filePath);
         ui->PoductAdd_pushButton->setEnabled(true);
         ui->PoductCheck_pushButton->setEnabled(true);
@@ -589,19 +540,77 @@ void OptionsDialog::browseFile()
     }
 }
 
-QString StockNo = "130000003";
-
 void OptionsDialog::CheckBOM()
 {
-    ui->ProductInfo_textEdit->setText("Checking..\r\n");
-    foreach(QString name, m_co->componentNames())
-    {
-        if(name == StockNo)
+    ui->ProductInfo_textEdit->setText("File Open..\r\n");
+
+    QAxObject* excel = new QAxObject( "Excel.Application", 0 );
+    QAxObject* workbooks = excel->querySubObject( "Workbooks" );
+    QAxObject* workbook = workbooks->querySubObject( "Open(const QString&)", filePath );
+    QAxObject* sheets = workbook->querySubObject( "Worksheets" );
+    QAxObject* sheet = sheets->querySubObject( "Item( int )", 1 );
+
+    bool FindStock = false;
+    int instock = 0;
+
+    for (int row=2; row <= 256; row++)
+    {        
+        //------------- StockNo Find --------------
+        QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,1);
+        QString StockNo = cell->dynamicCall("Value()").toString();
+        cell = sheet->querySubObject("Cells(int,int)",row,2);
+        QString CountNumber = cell->dynamicCall("Value()").toString();         
+        cell = sheet->querySubObject("Cells(int,int)",row,3);
+        QString Designator= cell->dynamicCall("Value()").toString();        
+
+        if(StockNo == "" || CountNumber == "" || Designator == "")
         {
-            ui->ProductInfo_textEdit->setText("Check done..\r\n");
+            if(FindStock == true)
+            {
+                ui->ProductInfo_textEdit->append("Has a Enough Stock.");
+                ui->ProductInfo_textEdit->append("Cheking Done...");
+            }
             break;
+        }        
+        FindStock = false;
+        foreach(QString name, m_co->componentNames())
+        {            
+            if(name == StockNo)
+            {
+                FindStock=true;
+                QList<Component*> usingIt;
+                foreach(Component *c, m_co->components())
+                    if(c->name() == name)
+                        usingIt.append(c);                
+
+                 foreach(Component *c, usingIt)
+                 {
+                     instock = c->totalStock();
+                 }                 
+                break;
+            }
         }
+        //----------------- Count Check ---------------
+        if(FindStock == false)
+        {
+            ui->ProductInfo_textEdit->append("Missing: " + StockNo  + " => " + Designator);
+        }
+        else
+        {      
+            if(instock == 0)
+            {
+                ui->ProductInfo_textEdit->append("No Stock: " + StockNo  + " => " + Designator + "(-" + CountNumber + ")");
+            }
+            else if(instock < CountNumber.toInt())
+            {                              
+                ui->ProductInfo_textEdit->append("Low Stock: " + StockNo  + " => " + Designator + "(-" + QString::number(CountNumber.toInt() - instock) + ")");
+            }
+            
+        }
+        //---------------------------------------------
     }
+    workbook->dynamicCall("Close()");
+    excel->dynamicCall("Quit()");
 }
 
 void OptionsDialog::ReduceBOM()
