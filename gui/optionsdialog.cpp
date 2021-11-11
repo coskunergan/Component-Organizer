@@ -454,7 +454,13 @@ void OptionsDialog::removeManufacturerHandler()
 
 bool OptionsDialog::message(const QString &msg)
 {
-    int b = QMessageBox::question(this, tr("Confirm"), msg, QMessageBox::No, QMessageBox::Yes);
+    QMessageBox msgBox;
+    msgBox.setText(msg);    
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::No);
+    int b = msgBox.exec();    
+
+    //int b = QMessageBox::question(this, tr("Confirm"), msg, QMessageBox::Yes, QMessageBox::No);
 
     if(b == QMessageBox::Yes)
         return true;
@@ -667,11 +673,11 @@ void OptionsDialog::ReduceBOM()
         return;
     }    
 
-    if(message(tr("Do you want to STOP the BOM to be REDUCE?")))
+    if(!message(tr("Do you want to REDUCE the BOM list?")))
     {
         ui->ProductInfo_textEdit->setText("Cancelled..");
         return;
-    }     
+    }                   
 
     ui->ProductInfo_textEdit->setText("Reducing please wait..");    
     ui->PoductAdd_pushButton->setEnabled(false);
@@ -690,7 +696,7 @@ void OptionsDialog::ReduceBOM()
 
     bool FindStock = false;
 
-    for (int row=2; row <= 256; row++)
+    for (int row=2; row <= 999; row++)
     {        
         //------------- StockNo Find --------------
         QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,1);
@@ -739,7 +745,6 @@ void OptionsDialog::ReduceBOM()
 
     ui->PoductAdd_pushButton->setEnabled(true);
     ui->PoductCheck_pushButton->setEnabled(true);
-    ui->PoductReduce_pushButton->setEnabled(true);
     ui->PoductMax_pushButton->setEnabled(true);
 }
 
@@ -754,11 +759,11 @@ void OptionsDialog::AddBOM()
         return;
     }    
 
-    if(message(tr("Do you want to STOP the BOM to be added?")))
+    if(!message(tr("Do you want to Add the BOM list.")))
     {
         ui->ProductInfo_textEdit->setText("Cancelled..");
         return;
-    }     
+    }         
 
     ui->ProductInfo_textEdit->setText("Adding please wait.."); 
     ui->PoductAdd_pushButton->setEnabled(false);
@@ -777,7 +782,7 @@ void OptionsDialog::AddBOM()
 
     bool FindStock = false;
 
-    for (int row=2; row <= 256; row++)
+    for (int row=2; row <= 999; row++)
     {        
         //------------- StockNo Find --------------
         QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,1);
@@ -810,7 +815,8 @@ void OptionsDialog::AddBOM()
                             Stock *s = c->stock(p->name());
                             if(s)
                             {
-                                s->setStock(s->stock() + CountNumber);                                             
+                                s->setStock(s->stock() + CountNumber);     
+                                c->setTotalStock(c->totalStock() + CountNumber);                                        
                                 break;
                             }
                         }                         
@@ -859,7 +865,7 @@ void OptionsDialog::MaximumBOMCalc()
         AddStockError = false;
         instock = 0;
 
-        for (int row=2; row <= 256; row++)
+        for (int row=2; row <= 999; row++)
         {        
             //------------- StockNo Find --------------
             QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,1);
@@ -912,17 +918,17 @@ void OptionsDialog::MaximumBOMCalc()
                     ReduceStockError = true;      
                     break;
                 }
-                else
-                {
-                    ui->ProductBOMCount_spinBox->setValue(BOMCount);  
-                    BOMCount++;
-                }
             }
             //---------------------------------------------
         }
         if(ReduceStockError || AddStockError)
         {
             break;
+        }
+        else
+        {
+            ui->ProductBOMCount_spinBox->setValue(BOMCount);  
+            BOMCount++;
         }
     }
     workbook->dynamicCall("Close()");

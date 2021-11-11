@@ -404,8 +404,8 @@ void MainWindow::about()
     text.append("\n");
     text.append("\nThis is OPEN SOURCE software as defined by the GPLv3 (or later). Feel free to contribute!");
     text.append("\n");
-    text.append("\n3xbla.wordpress.com/component-organizer/");
-    text.append("\ngithub.com/3xdigital/Component-Organizer");
+    text.append("\nModified by Coskun Ergan\n");
+    text.append("\nhttps://github.com/coskunergan/Component-Organizer.git");
 
     QMessageBox::about(this, "About", text);
 }
