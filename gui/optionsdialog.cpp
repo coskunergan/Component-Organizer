@@ -591,7 +591,7 @@ void OptionsDialog::CheckBOM()
         
         FindComponentError=true;  
 
-        if(StockNo == "" || CountNumber == 0 || Designator == "")
+        if(StockNo == "" && CountNumber == 0 && Designator == "")
         {            
             break;
         }           
@@ -706,7 +706,7 @@ void OptionsDialog::ReduceBOM()
         cell = sheet->querySubObject("Cells(int,int)",row,3);
         QString Designator= cell->dynamicCall("Value()").toString();        
 
-        if(StockNo == "" || CountNumber == 0 || Designator == "")
+        if(StockNo == "" && CountNumber == 0 && Designator == "")
         {
             if(FindStock == true)
             {
@@ -792,7 +792,7 @@ void OptionsDialog::AddBOM()
         cell = sheet->querySubObject("Cells(int,int)",row,3);
         QString Designator= cell->dynamicCall("Value()").toString();        
 
-        if(StockNo == "" || CountNumber == 0 || Designator == "")
+        if(StockNo == "" && CountNumber == 0 && Designator == "")
         {
             if(FindStock == true)
             {
@@ -875,7 +875,7 @@ void OptionsDialog::MaximumBOMCalc()
             cell = sheet->querySubObject("Cells(int,int)",row,3);
             QString Designator= cell->dynamicCall("Value()").toString();        
 
-            if(StockNo == "" || CountNumber == 0 || Designator == "")
+            if(StockNo == "" && CountNumber == 0 && Designator == "")
             {
                 break;
             }        

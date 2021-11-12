@@ -54,7 +54,7 @@ ComponentDetails::~ComponentDetails()
 {
     delete m_stockTable;
     delete m_datasheetTable;
-    delete ui;
+    delete ui;    
 }
 
 void ComponentDetails::setup()
@@ -150,6 +150,8 @@ void ComponentDetails::accept()
     }
     m_component->setTotalStock(total);
 
+    m_component->setNotes(ui->notes_textEdit->toPlainText());
+    
     done(QDialog::Accepted);
 }
 

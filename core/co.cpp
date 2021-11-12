@@ -844,6 +844,10 @@ void CO::processXmlNode(QXmlStreamReader &xml)
             xml.skipCurrentElement();
         }
         xml.skipCurrentElement();
+        xml.readNextStartElement(); // notes
+        c->setNotes(xml.readElementText());
+
+        xml.skipCurrentElement();
 
         addComponent(c);
     }
