@@ -69,6 +69,7 @@ public slots:
 private slots:
     void primaryLabelChangedHandler();
     void secondaryLabelChangedHandler();
+    void exportFile();
     
 private:
     Ui::MainWindow *ui;

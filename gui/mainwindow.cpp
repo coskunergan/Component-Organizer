@@ -1,6 +1,6 @@
 /*********************************************************************
 Component Organizer
-Copyright (C) Mário Ribeiro (mario.ribas@gmail.com)
+Copyright (C) M¨¢rio Ribeiro (mario.ribas@gmail.com)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,6 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMessageBox>
 #include <QSettings>
 #include <QDir>
+#include <QFileDialog>
+#include <QAxObject>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -85,6 +87,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(close()));
 
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
+
+    connect(ui->Export_pushButton, SIGNAL(clicked()), this, SLOT(exportFile()));
 
     connect(componentTable, SIGNAL(showDetailsRequest(Component*)), this, SLOT(showComponentDetailsDialog(Component*)));
     connect(componentTable, SIGNAL(editRequest(Component*)), this, SLOT(showEditComponentDialog(Component*)));
@@ -425,5 +429,60 @@ void MainWindow::closeEvent(QCloseEvent *)
 
     updateXML();
 }
+
+void MainWindow::exportFile()
+{
+    QString filepath = QFileDialog::getSaveFileName(this,
+                                                    tr("Export Excel File"),
+                                                    "Stock_" + QDateTime::currentDateTime().toString("dd_MM_yyyy"),
+                                                    tr("Microsoft Office 2007 (*.xlsx)"));
+
+    if(!filepath.isEmpty())
+    {        
+        QAxObject *excel = new QAxObject(this);
+        excel->setControl("Excel.Application");//Connect Excel control
+        excel->dynamicCall("SetVisible (bool Visible)","false");//Do not display the form
+        excel->setProperty("DisplayAlerts", false);//Do not display any warning messages. If it is true, a prompt similar to "File has been modified, whether to save" will appear when closing
+        QAxObject *workbooks = excel->querySubObject("WorkBooks");//Get workbook collection
+        workbooks->dynamicCall("Add");//Create a new workbook
+        QAxObject *workbook = excel->querySubObject("ActiveWorkBook");//Get the current workbook
+        QAxObject *worksheets = workbook->querySubObject("Sheets");//Get a collection of worksheets
+        QAxObject *worksheet = worksheets->querySubObject("Item(int)",1);//Get worksheet 1 of the worksheet collection, namely sheet1
+        QAxObject *cellA,*cellB,*cellC,*cellD;
+
+        for(int i=0; i<4; i++)
+        {
+            QString A="A"+QString::number(i+1);//Set the cell to be operated, such as A1
+            QString B="B"+QString::number(i+1);
+            QString C="C"+QString::number(i+1);
+            QString D="D"+QString::number(i+1);
+            cellA = worksheet->querySubObject("Range(QVariant, QVariant)",A);//Get the cell
+            cellB = worksheet->querySubObject("Range(QVariant, QVariant)",B);
+            cellC = worksheet->querySubObject("Range(QVariant, QVariant)",C);
+            cellD = worksheet->querySubObject("Range(QVariant, QVariant)",D);
+            if(i==0)
+            {
+                cellA->dynamicCall("SetValue(const QVariant&)",QString("Name"));//Set the value of the cell
+                cellB->dynamicCall("SetValue(const QVariant&)",QString("Description"));
+                cellC->dynamicCall("SetValue(const QVariant&)",QString("Stock"));
+                cellD->dynamicCall("SetValue(const QVariant&)",QString("Container"));
+            }
+            else
+            {
+                cellA->dynamicCall("SetValue(const QVariant&)",QVariant(i));//Set the value of the cell
+                cellB->dynamicCall("SetValue(const QVariant&)",QVariant(i));
+                cellC->dynamicCall("SetValue(const QVariant&)",QVariant(i));
+                cellD->dynamicCall("SetValue(const QVariant&)",QVariant(i));
+            }
+        }
+        workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(filepath));//Save to filepath, be sure to use QDir::toNativeSeparators to convert "/" in the path to "\", otherwise It must not be saved.
+        workbook->dynamicCall("Close()");//Close the workbook
+        excel->dynamicCall("Quit()");//Close excel
+        delete excel;
+        excel=NULL;
+        QMessageBox::about(this, "Export", "Export Done..");
+    }
+}
+
 
 
