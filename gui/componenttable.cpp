@@ -48,7 +48,7 @@ ComponentTable::ComponentTable(CO *co, QWidget *parent) :
 
     QStringList headerLabels;
     headerLabels.append(tr("ID"));
-    headerLabels.append(tr("Name"));
+    headerLabels.append(tr("Code"));
     headerLabels.append(tr("Description"));
     headerLabels.append(tr("Datasheet"));
     headerLabels.append(tr("Stock"));
