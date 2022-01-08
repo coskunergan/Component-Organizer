@@ -37,7 +37,10 @@ class CO : public QObject
 public:
     explicit CO(QObject *parent = 0);
 
-    QString dirPath() { return m_dirPath; }
+    QString dirPath()
+    {
+        return m_dirPath;
+    }
 
     void useDefaultData();
 
@@ -58,18 +61,24 @@ public:
     void removeApplicationNote(ApplicationNote *appnote);
     void removeApplicationNote(const QString &description);
 
-    QList<Component *> components() { return m_components; }
-    QList<ApplicationNote*> applicationNotes() { return m_appnotes; }
+    QList<Component *> components()
+    {
+        return m_components;
+    }
+    QList<ApplicationNote *> applicationNotes()
+    {
+        return m_appnotes;
+    }
 
-    Component* findComponent(int ID);
-    Component* findComponent(const QString &name);
-    ApplicationNote* findApplicationNote(const QString &description);
-    Manufacturer* findManufacturer(const QString &name);
-    Package* findPackage(const QString &name);
-    Container* findContainer(const QString &name);
-    Label* findTopLabel(const QString &name);
-    Label* findLabel(const QString &name);
-    Label* findSecondaryLabel(Label *top, const QString &name);
+    Component *findComponent(int ID);
+    Component *findComponent(const QString &name);
+    ApplicationNote *findApplicationNote(const QString &description);
+    Manufacturer *findManufacturer(const QString &name);
+    Package *findPackage(const QString &name);
+    Container *findContainer(const QString &name);
+    Label *findTopLabel(const QString &name);
+    Label *findLabel(const QString &name);
+    Label *findSecondaryLabel(Label *top, const QString &name);
 
     QStringList componentNames();
     QStringList appnoteNames();
@@ -77,10 +86,13 @@ public:
     QStringList packageNames();
     QStringList containerNames();
 
-    QList<Label*> topLabels() { return m_topLabels; }
+    QList<Label *> topLabels()
+    {
+        return m_topLabels;
+    }
 
 signals:
-    
+
 public slots:
     bool execFile(const QString &filePath);
     bool copyFile(const QString &filePath, const QString &newPath);
@@ -95,7 +107,7 @@ private:
     QList<Manufacturer *>    m_manufacturers;
     QList<Package *>         m_packages;
     QList<Container *>       m_containers;
-    QList<Label*>            m_topLabels;
+    QList<Label *>            m_topLabels;
 
     QString m_dirPath;
 

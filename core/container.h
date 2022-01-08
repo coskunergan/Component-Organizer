@@ -26,16 +26,19 @@ class Container : public QObject
     Q_OBJECT
 public:
     explicit Container(const QString &name, QObject *parent = 0);
-    
-    QString name() { return m_name; }
+
+    QString name()
+    {
+        return m_name;
+    }
 
 signals:
-    
+
 public slots:
 
 private:
     QString m_name;
-    
+
 };
 
 #endif // CONTAINER_H

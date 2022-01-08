@@ -26,21 +26,45 @@ class ApplicationNote : public QObject
     Q_OBJECT
 public:
     explicit ApplicationNote(const QString description, QObject *parent = 0);
-    
-    void setDescription(const QString &description) { m_description = description; }
-    QString description() { return m_description; }
 
-    void setName(const QString &name) { m_name = name; }
-    QString name() { return m_name; }
+    void setDescription(const QString &description)
+    {
+        m_description = description;
+    }
+    QString description()
+    {
+        return m_description;
+    }
 
-    void setPdfPath(const QString &pdfPath) { m_pdfPath = pdfPath; }
-    QString pdfPath() { return m_pdfPath; }
+    void setName(const QString &name)
+    {
+        m_name = name;
+    }
+    QString name()
+    {
+        return m_name;
+    }
 
-    void setAttachedFilePath(const QString &attachedFilePath) { m_attachedFilePath = attachedFilePath; }
-    QString attachedFilePath() { return m_attachedFilePath; }
+    void setPdfPath(const QString &pdfPath)
+    {
+        m_pdfPath = pdfPath;
+    }
+    QString pdfPath()
+    {
+        return m_pdfPath;
+    }
+
+    void setAttachedFilePath(const QString &attachedFilePath)
+    {
+        m_attachedFilePath = attachedFilePath;
+    }
+    QString attachedFilePath()
+    {
+        return m_attachedFilePath;
+    }
 
 signals:
-    
+
 public slots:
 
 private:
@@ -48,7 +72,7 @@ private:
     QString m_name;
     QString m_pdfPath;
     QString m_attachedFilePath;
-    
+
 };
 
 #endif // APPLICATIONNOTE_H

@@ -38,7 +38,7 @@ public:
 
     explicit ApplicationNoteTable(CO *co, QWidget *parent = 0);
 
-    ApplicationNote* applicationNote(int row);
+    ApplicationNote *applicationNote(int row);
 
 signals:
     void editRequest(ApplicationNote *);

@@ -45,9 +45,9 @@ public:
     RowColorHint rowColorHint(int row);
     QList<int> rows(RowColorHint hint);
     int hasText(const QString &text, int column, Qt::CaseSensitivity cs = Qt::CaseSensitive);
-    
+
 signals:
-    
+
 public slots:
 
 protected:
@@ -55,7 +55,7 @@ protected:
     const QColor m_addRowColor;
     const QColor m_removeRowColor;
     const QColor m_changeRowColor;
-    
+
 };
 
 #endif // PMINITABLEWIDGET_H

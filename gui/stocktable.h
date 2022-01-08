@@ -38,7 +38,7 @@ public:
     };
 
     explicit StockTable(QWidget *parent = 0);
-    
+
     QString package(int row);
     int stock(int row);
     int lowValue(int row);
@@ -49,7 +49,7 @@ public:
 signals:
     void stockChanged(int row);
     void lowValueChanged(int row);
-    
+
 public slots:
     int addStock(Stock *stock);
 
@@ -61,7 +61,7 @@ private slots:
 private:
 
     void fillRow(int row, Stock *stock);
-    
+
 };
 
 #endif // STOCKTABLE_H

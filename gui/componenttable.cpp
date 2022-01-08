@@ -86,10 +86,10 @@ ComponentTable::ComponentTable(CO *co, QWidget *parent) :
     connect(m_actionNew, SIGNAL(triggered()), this, SIGNAL(newComponentRequest()));
 
     connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(itemSelectionChangedHandler()));
-    connect(this, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(showDetailsHandler()));
+    connect(this, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(showDetailsHandler()));
 }
 
-Component* ComponentTable::component(int row)
+Component *ComponentTable::component(int row)
 {
     int ID = item(row, IDColumn)->text().toInt();
     return m_co->findComponent(ID);
@@ -220,7 +220,7 @@ void ComponentTable::viewDatasheetHandler()
         Datasheet *d = link->defaultDatasheet();
         QString filePath = d->path();
         QString fullPath = QApplication::applicationDirPath() +
-                CO_DATASHEET_PATH + filePath;
+                           CO_DATASHEET_PATH + filePath;
 
         m_co->execFile(fullPath);
     }
@@ -253,9 +253,9 @@ void ComponentTable::removeHandler()
         qDebug() << "removeHandler()" << m_selected->name();
 
         int res = QMessageBox::question(this, tr("Confirm"),
-                      tr("Are you sure you want to remove \"") + m_selected->name() + "\"?\n" +
-                      tr("All datasheets will be deleted."),
-                      QMessageBox::Yes, QMessageBox::No);
+                                        tr("Are you sure you want to remove \"") + m_selected->name() + "\"?\n" +
+                                        tr("All datasheets will be deleted."),
+                                        QMessageBox::Yes, QMessageBox::No);
         if(res == QMessageBox::Yes)
         {
             Component *c = component(currentRow());
@@ -272,7 +272,7 @@ void ComponentTable::itemSelectionChangedHandler()
 }
 
 void ComponentTable::showContextMenu(const QPoint &pos)
-{   
+{
     if(!m_contextMenu->isEmpty())
     {
         if(itemAt(pos) == 0)

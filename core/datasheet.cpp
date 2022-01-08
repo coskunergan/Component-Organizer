@@ -24,11 +24,16 @@ QString Datasheet::typeToString(Type type)
 {
     switch(type)
     {
-    case Datasheet::Normal:     return QString(tr("Datasheet"));
-    case Datasheet::Summary:    return QString(tr("Summary"));
-    case Datasheet::Errata:     return QString(tr("Errata"));
-    case Datasheet::UsersGuide: return QString(tr("User's Guide"));
-    default: return QString();
+        case Datasheet::Normal:
+            return QString(tr("Datasheet"));
+        case Datasheet::Summary:
+            return QString(tr("Summary"));
+        case Datasheet::Errata:
+            return QString(tr("Errata"));
+        case Datasheet::UsersGuide:
+            return QString(tr("User's Guide"));
+        default:
+            return QString();
     }
 }
 
@@ -37,20 +42,21 @@ Datasheet::Type Datasheet::typeFromString(QString str)
     if(str.compare(tr("Datasheet")) == 0)
     {
         return Datasheet::Normal;
-    } else
-    if(str.compare(tr("Summary")) == 0)
+    }
+    else if(str.compare(tr("Summary")) == 0)
     {
         return Datasheet::Summary;
-    } else
-    if(str.compare(tr("Errata")) == 0)
+    }
+    else if(str.compare(tr("Errata")) == 0)
     {
         return Datasheet::Errata;
-    } else
-    if(str.compare(tr("User's Guide")) == 0)
+    }
+    else if(str.compare(tr("User's Guide")) == 0)
     {
         return Datasheet::UsersGuide;
-    } else
-        return (Datasheet::Type)-1;
+    }
+    else
+        return (Datasheet::Type) - 1;
 }
 
 QStringList Datasheet::typeNames()

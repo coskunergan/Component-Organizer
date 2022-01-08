@@ -27,17 +27,23 @@ class pToolButton : public QToolButton
 public:
     explicit pToolButton(QWidget *parent = 0);
 
-    void setNumber(int number) { m_number = number; }
-    int number() { return m_number; }
-    
+    void setNumber(int number)
+    {
+        m_number = number;
+    }
+    int number()
+    {
+        return m_number;
+    }
+
 signals:
-    
+
 public slots:
 
 
 private:
     int m_number;
-    
+
 };
 
 #endif // PTOOLBUTTON_H

@@ -29,23 +29,38 @@ class Stock : public QObject
 public:
     explicit Stock(Package *package, QObject *parent = 0);
 
-    Package* package() { return m_package; }
+    Package *package()
+    {
+        return m_package;
+    }
 
-    void setStock(int stock) { m_stock = stock; }
-    int stock() { return m_stock; }
+    void setStock(int stock)
+    {
+        m_stock = stock;
+    }
+    int stock()
+    {
+        return m_stock;
+    }
 
-    void setLowValue(int low) { m_lowValue = low; }
-    int lowValue() { return m_lowValue; }
-    
+    void setLowValue(int low)
+    {
+        m_lowValue = low;
+    }
+    int lowValue()
+    {
+        return m_lowValue;
+    }
+
 signals:
-    
+
 public slots:
 
 private:
     Package *m_package;
     int m_stock;
     int m_lowValue;
-    
+
 };
 
 #endif // STOCK_H

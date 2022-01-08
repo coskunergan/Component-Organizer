@@ -63,7 +63,7 @@ ApplicationNoteTable::ApplicationNoteTable(CO *co, QWidget *parent) :
     connect(m_actionNew, SIGNAL(triggered()), this, SIGNAL(newApplicationNoteRequest()));
 }
 
-ApplicationNote* ApplicationNoteTable::applicationNote(int row)
+ApplicationNote *ApplicationNoteTable::applicationNote(int row)
 {
     QString description = item(row, DescriptionColumn)->text();
     return m_co->findApplicationNote(description);
@@ -167,9 +167,9 @@ void ApplicationNoteTable::removeHandler()
         ApplicationNote *a = applicationNote(currentRow());
 
         int res = QMessageBox::question(this, tr("Confirm"),
-                      tr("Are you sure you want to remove \"") + a->description() + "\"?\n" +
-                      tr("The PDF and attached files will be deleted."),
-                      QMessageBox::Yes, QMessageBox::No);
+                                        tr("Are you sure you want to remove \"") + a->description() + "\"?\n" +
+                                        tr("The PDF and attached files will be deleted."),
+                                        QMessageBox::Yes, QMessageBox::No);
         if(res == QMessageBox::Yes)
         {
             m_co->removeApplicationNote(a);

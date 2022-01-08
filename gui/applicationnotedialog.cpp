@@ -65,12 +65,12 @@ void ApplicationNoteDialog::setup()
 
     switch(m_mode)
     {
-    case ApplicationNoteDialog::Add:
-        setWindowTitle(tr("Add Application Note"));
-        break;
-    case ApplicationNoteDialog::Edit:
-        setWindowTitle(tr("Edit Application Note"));
-        break;
+        case ApplicationNoteDialog::Add:
+            setWindowTitle(tr("Add Application Note"));
+            break;
+        case ApplicationNoteDialog::Edit:
+            setWindowTitle(tr("Edit Application Note"));
+            break;
     }
 
     connect(ui->appnote_pushButton, SIGNAL(clicked()), this, SLOT(browsePDF()));
@@ -92,13 +92,13 @@ void ApplicationNoteDialog::accept()
 
     switch(m_mode)
     {
-    case ApplicationNoteDialog::Add:
-        createApplicationNote();
-        m_co->addApplicationNote(m_appnote);
-        break;
-    case ApplicationNoteDialog::Edit:
-        updateApplicationNote();
-        break;
+        case ApplicationNoteDialog::Add:
+            createApplicationNote();
+            m_co->addApplicationNote(m_appnote);
+            break;
+        case ApplicationNoteDialog::Edit:
+            updateApplicationNote();
+            break;
     }
 
     done(QDialog::Accepted);
@@ -107,9 +107,9 @@ void ApplicationNoteDialog::accept()
 void ApplicationNoteDialog::browsePDF()
 {
     QString filePath = QFileDialog::getOpenFileName(this,
-                                                    tr("Select Application Note"),
-                                                    "",
-                                                    tr("Application Note (*.pdf)"));
+                       tr("Select Application Note"),
+                       "",
+                       tr("Application Note (*.pdf)"));
 
     if(!filePath.isNull())
         ui->appnote_lineEdit->setText(filePath);
@@ -120,7 +120,7 @@ void ApplicationNoteDialog::browsePDF()
 void ApplicationNoteDialog::browseattachedFile()
 {
     QString filePath = QFileDialog::getOpenFileName(this,
-                                                    tr("Select attachedFile"));
+                       tr("Select attachedFile"));
 
     if(!filePath.isNull())
         ui->attach_lineEdit->setText(filePath);

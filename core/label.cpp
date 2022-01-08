@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDebug>
 
-Label::Label(const QString &name, Label *top, QList<Label*> leafs, QObject *parent) :
+Label::Label(const QString &name, Label *top, QList<Label *> leafs, QObject *parent) :
     QObject(parent),
     m_name(name),
     m_top(top)
@@ -39,7 +39,7 @@ void Label::removeLeaf(const QString &name)
     }
 }
 
-Label* Label::leaf(const QString &name)
+Label *Label::leaf(const QString &name)
 {
     foreach(Label *l, m_leafs)
         if(l->name().compare(name) == 0)

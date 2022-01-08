@@ -27,14 +27,15 @@ class ApplicationNote;
 class ComponentTable;
 class ApplicationNoteTable;
 
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+
 public:
     struct Settings
     {
@@ -48,8 +49,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void setSettings(Settings settings) { m_settings = settings; }
-    Settings settings() { return m_settings; }
+    void setSettings(Settings settings)
+    {
+        m_settings = settings;
+    }
+    Settings settings()
+    {
+        return m_settings;
+    }
 
 protected:
     void closeEvent(QCloseEvent *);
@@ -70,7 +77,7 @@ private slots:
     void primaryLabelChangedHandler();
     void secondaryLabelChangedHandler();
     void exportFile();
-    
+
 private:
     Ui::MainWindow *ui;
 

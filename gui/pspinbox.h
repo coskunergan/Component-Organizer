@@ -27,8 +27,14 @@ class pSpinBox : public QSpinBox
 public:
     explicit pSpinBox(QWidget *parent = 0);
 
-    void setNumber(int number) { m_number = number; }
-    int number() { return m_number; }
+    void setNumber(int number)
+    {
+        m_number = number;
+    }
+    int number()
+    {
+        return m_number;
+    }
 
 signals:
 
@@ -37,7 +43,7 @@ public slots:
 
 private:
     int m_number;
-    
+
 };
 
 #endif // PSPINBOX_H

@@ -29,12 +29,15 @@ class pTableWidget : public QTableWidget
 public:
     explicit pTableWidget(QWidget *parent = 0);
 
-    void setDefaultSortedColumn(int column) { m_defaultSortedColumn = column; }
+    void setDefaultSortedColumn(int column)
+    {
+        m_defaultSortedColumn = column;
+    }
     void removeAll();
     int findText(const QString &text, int column);
     void sortByColumn(int column, Qt::SortOrder order);
     void sortByColumn(int column);
-    
+
 public slots:
     int addRow();
     void removeRow(int row);
@@ -47,7 +50,7 @@ protected slots:
 
 private:
     int m_defaultSortedColumn;
-    
+
 };
 
 #endif // PTABLEWIDGET_H

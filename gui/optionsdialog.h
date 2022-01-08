@@ -26,14 +26,15 @@ class QMainWindow;
 class CO;
 class pMiniTableWidget;
 
-namespace Ui {
+namespace Ui
+{
 class OptionsDialog;
 }
 
 class OptionsDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     explicit OptionsDialog(CO *co, QWidget *parent = 0);
     ~OptionsDialog();
@@ -65,7 +66,7 @@ private slots:
     void SmtBrowseBOMFile();
     void SmtBrowsePlaceFile();
     void SmtGenerateFile();
-    
+
 private:
 
     Ui::OptionsDialog *ui;

@@ -40,13 +40,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 CO::CO(QObject *parent) :
     QObject(parent)
 {
-    #ifdef __linux__
+#ifdef __linux__
     QDir().mkdir(QDir::homePath() + "/.Component-Organizer");
     QDir().mkdir(QDir::homePath() + "/.Component-Organizer/fakeplace");
     m_dirPath = QDir::homePath() + "/.Component-Organizer/fakeplace";
-    #else
+#else
     m_dirPath = QApplication::applicationDirPath();
-    #endif
+#endif
 }
 
 void CO::useDefaultData()
@@ -82,7 +82,7 @@ void CO::useDefaultData()
     top->addLeaf(new Label(tr("TRIAC"), top));
     top->addLeaf(new Label(tr("DIAC"), top));
     top->addLeaf(new Label(tr("Varicap"), top));
-     m_topLabels.append(top);
+    m_topLabels.append(top);
 
     top = new Label(tr("Resistor"));
     top->addLeaf(new Label(tr("Carbon Film"), top));
@@ -117,21 +117,21 @@ void CO::useDefaultData()
     top->addLeaf(new Label(tr("Power Inductor"), top));
     top->addLeaf(new Label(tr("RF"), top));
     m_topLabels.append(top);
-    
+
     top = new Label(tr("Optoelectronic"));
     top->addLeaf(new Label(tr("lamp"), top));
     top->addLeaf(new Label(tr("LED"), top));
     top->addLeaf(new Label(tr("Laser"), top));
     top->addLeaf(new Label(tr("Optocoupler"), top));
     m_topLabels.append(top);
-    
+
     top = new Label(tr("Display"));
     top->addLeaf(new Label(tr("OLED"), top));
     top->addLeaf(new Label(tr("LCD"), top));
     top->addLeaf(new Label(tr("7-Segment"), top));
     top->addLeaf(new Label(tr("Bar graph"), top));
     m_topLabels.append(top);
-    
+
     top = new Label(tr("Microcontroller"));
     top->addLeaf(new Label(tr("PIC"), top));
     top->addLeaf(new Label(tr("ATmega"), top));
@@ -154,7 +154,7 @@ void CO::useDefaultData()
     top->addLeaf(new Label(tr("A/D"), top));
     top->addLeaf(new Label(tr("D/A"), top));
     m_topLabels.append(top);
-    
+
     top = new Label(tr("Signal Conditioner"));
     top->addLeaf(new Label(tr("Op. Amp."), top));
     top->addLeaf(new Label(tr("Comparator"), top));
@@ -192,7 +192,7 @@ void CO::useDefaultData()
     top->addLeaf(new Label(tr("SRAM"), top));
     top->addLeaf(new Label(tr("FLASH"), top));
     m_topLabels.append(top);
-    
+
     top = new Label(tr("Relay"));
     top->addLeaf(new Label(tr("Power Relay"), top));
     top->addLeaf(new Label(tr("Signal Relay"), top));
@@ -275,8 +275,8 @@ void CO::removePackage(const QString &name)
 }
 
 QList<Package *> CO::getPackages()
-{            
-    return m_packages;     
+{
+    return m_packages;
 }
 
 void CO::removeContainer(const QString &name)
@@ -346,7 +346,7 @@ void CO::removeApplicationNote(const QString &description)
     removeApplicationNote(a);
 }
 
-Component* CO::findComponent(int ID)
+Component *CO::findComponent(int ID)
 {
     foreach(Component *c, m_components)
         if(c->ID() == ID)
@@ -355,7 +355,7 @@ Component* CO::findComponent(int ID)
     return 0;
 }
 
-Component* CO::findComponent(const QString &name)
+Component *CO::findComponent(const QString &name)
 {
     foreach(Component *c, m_components)
         if(c->name().compare(name) == 0)
@@ -364,7 +364,7 @@ Component* CO::findComponent(const QString &name)
     return 0;
 }
 
-ApplicationNote* CO::findApplicationNote(const QString &description)
+ApplicationNote *CO::findApplicationNote(const QString &description)
 {
     foreach(ApplicationNote *a, m_appnotes)
         if(a->description().compare(description) == 0)
@@ -373,34 +373,34 @@ ApplicationNote* CO::findApplicationNote(const QString &description)
     return 0;
 }
 
-Manufacturer* CO::findManufacturer(const QString &name)
+Manufacturer *CO::findManufacturer(const QString &name)
 {
-    foreach(Manufacturer* m, m_manufacturers)
+    foreach(Manufacturer *m, m_manufacturers)
         if(m->name().compare(name) == 0)
             return m;
 
     return 0;
 }
 
-Package* CO::findPackage(const QString &name)
+Package *CO::findPackage(const QString &name)
 {
-    foreach(Package* p, m_packages)
+    foreach(Package *p, m_packages)
         if(p->name().compare(name) == 0)
             return p;
 
     return 0;
 }
 
-Container* CO::findContainer(const QString &name)
+Container *CO::findContainer(const QString &name)
 {
-    foreach(Container* c, m_containers)
+    foreach(Container *c, m_containers)
         if(c->name().compare(name) == 0)
             return c;
 
     return 0;
 }
 
-Label* CO::findTopLabel(const QString &name)
+Label *CO::findTopLabel(const QString &name)
 {
     foreach(Label *top, m_topLabels)
         if(top->name().compare(name) == 0)
@@ -409,7 +409,7 @@ Label* CO::findTopLabel(const QString &name)
     return 0;
 }
 
-Label* CO::findLabel(const QString &name)
+Label *CO::findLabel(const QString &name)
 {
     foreach(Label *top, m_topLabels)
     {
@@ -424,10 +424,11 @@ Label* CO::findLabel(const QString &name)
 }
 
 //TODO: add method
-Label* CO::findSecondaryLabel(Label *top, const QString &name)
+Label *CO::findSecondaryLabel(Label *top, const QString &name)
 {
     //sketch
-    foreach(Label *leaf, top->leafs()) {
+    foreach(Label *leaf, top->leafs())
+    {
         if(leaf->name().compare(name) == 0)
             return leaf;
     }
@@ -587,7 +588,7 @@ bool CO::writeXML(const QString &filePath)
         foreach(Datasheet *d, c->datasheets())
         {
             stream.writeStartElement("datasheet");
-            stream.writeAttribute("type", Datasheet::typeToString(d->type()));          
+            stream.writeAttribute("type", Datasheet::typeToString(d->type()));
 
             if(d->manufacturer() != 0 && d->manufacturer()->name() != "0") //TODO: error
                 stream.writeAttribute("manufacturer", d->manufacturer()->name());
@@ -600,7 +601,7 @@ bool CO::writeXML(const QString &filePath)
 
         stream.writeStartElement("stocks");
         stream.writeAttribute("n", QString::number(c->stocks().count()));
-        stream.writeAttribute("ignore", QString(c->ignoreStock()?"true":"false"));
+        stream.writeAttribute("ignore", QString(c->ignoreStock() ? "true" : "false"));
         foreach(Stock *s, c->stocks())
         {
             stream.writeStartElement("stock");
@@ -619,7 +620,7 @@ bool CO::writeXML(const QString &filePath)
         stream.writeEndElement(); // </container>
 
         stream.writeStartElement("labels");
-        int count=0;
+        int count = 0;
         if(c->primaryLabel() != 0) count++;
         if(c->secondaryLabel() != 0) count++;
         stream.writeAttribute("n", QString::number(count++));
@@ -685,10 +686,11 @@ bool CO::readXML(const QString &filePath)
 
         switch(xml.tokenType())
         {
-        case QXmlStreamReader::StartElement:
-            processXmlNode(xml);
-            break;
-        default: ;
+            case QXmlStreamReader::StartElement:
+                processXmlNode(xml);
+                break;
+            default:
+                ;
         }
     }
 
@@ -832,13 +834,14 @@ void CO::processXmlNode(QXmlStreamReader &xml)
             QString labelName = xml.attributes().at(1).value().toString();
             switch(level)
             {
-            case 0:
-                c->setLabel((Component::LabelLevel)level, findTopLabel(labelName));
-                break;
-            case 1:
-                c->setLabel((Component::LabelLevel)level, findTopLabel(c->primaryLabel()->name())->leaf(labelName));
-                break;
-            default: ;
+                case 0:
+                    c->setLabel((Component::LabelLevel)level, findTopLabel(labelName));
+                    break;
+                case 1:
+                    c->setLabel((Component::LabelLevel)level, findTopLabel(c->primaryLabel()->name())->leaf(labelName));
+                    break;
+                default:
+                    ;
             }
 
             xml.skipCurrentElement();
@@ -871,7 +874,7 @@ void CO::processXmlNode(QXmlStreamReader &xml)
 void CO::linkDatasheets()
 {
     QMap<Component *, QString>::const_iterator i = m_toLink.constBegin();
-    while (i != m_toLink.constEnd())
+    while(i != m_toLink.constEnd())
     {
         Component *c = (Component *) i.key();
         QString name = (QString) i.value();

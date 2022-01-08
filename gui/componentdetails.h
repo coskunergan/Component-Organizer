@@ -27,25 +27,26 @@ class Component;
 class DatasheetTable;
 class StockTable;
 
-namespace Ui {
+namespace Ui
+{
 class ComponentDetails;
 }
 
 class ComponentDetails : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     explicit ComponentDetails(CO *co, Component *component = 0, QWidget *parent = 0);
-    ~ComponentDetails();        
+    ~ComponentDetails();
 
-protected:    
+protected:
     void closeEvent(QCloseEvent *);
 
 private slots:
-    void viewDatasheetHandler();      
+    void viewDatasheetHandler();
     void updateStockTable();
-    
+
 private:
     void accept();
     void setup();

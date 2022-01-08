@@ -38,7 +38,7 @@ Component::Component(const QString name, QObject *parent) :
     m_primaryLabel(0),
     m_secondaryLabel(0),
     m_linkedTo(0)
-{    
+{
 
 }
 
@@ -76,7 +76,7 @@ bool Component::setDefaultDatasheetIndex(int index)
         return false;
 }
 
-Datasheet* Component::defaultDatasheet()
+Datasheet *Component::defaultDatasheet()
 {
     if(m_defaultDatasheetIndex >= 0)
         return m_datasheets.at(m_defaultDatasheetIndex);
@@ -84,9 +84,9 @@ Datasheet* Component::defaultDatasheet()
         return 0;
 }
 
-Datasheet* Component::datasheet(const QString &path)
+Datasheet *Component::datasheet(const QString &path)
 {
-    foreach(Datasheet* d, m_datasheets)
+    foreach(Datasheet *d, m_datasheets)
         if(d->path().compare(path) == 0)
             return d;
 
@@ -112,7 +112,7 @@ QList<Stock *> Component::stocks()
     return m_stocks;
 }
 
-Stock* Component::stock(const QString &packageName)
+Stock *Component::stock(const QString &packageName)
 {
     foreach(Stock *s, m_stocks)
         if(s->package()->name().compare(packageName) == 0)
@@ -125,8 +125,13 @@ void Component::setLabel(int level, Label *label)
 {
     switch(level)
     {
-    case 0: m_primaryLabel = label; break;
-    case 1: m_secondaryLabel = label; break;
-    default: ;
+        case 0:
+            m_primaryLabel = label;
+            break;
+        case 1:
+            m_secondaryLabel = label;
+            break;
+        default:
+            ;
     }
 }

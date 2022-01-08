@@ -39,21 +39,24 @@ public:
     Datasheet::Type type(int row);
     QString manufacturer(int row);
     QString path(int row);
-    int defaultDatasheetRow() { return m_defaultDatasheetRow; }
+    int defaultDatasheetRow()
+    {
+        return m_defaultDatasheetRow;
+    }
     bool isDefaultDatasheet(int row);
     void setDefaultDatasheet(int row);
     void autoSetDefaultDatasheet();
     bool hasDatasheet(Datasheet *datasheet);
-    
+
 signals:
-    
+
 public slots:
     int addDatasheet(Datasheet *datasheet);
     void removeRow(int row);
 
 private:
     void fillRow(int row, Datasheet *datasheet);
-    
+
     int m_defaultDatasheetRow;
 };
 

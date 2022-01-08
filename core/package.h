@@ -28,17 +28,20 @@ public:
     static QStringList defaultNames();
 
     explicit Package(const QString &name, QObject *parent = 0);
-    QString name() { return m_name; }
-    
+    QString name()
+    {
+        return m_name;
+    }
+
 signals:
-    
+
 public slots:
 
 private:
     const static QStringList m_defaultNames;
 
     QString m_name;
-    
+
 };
 
 #endif // PACKAGE_H

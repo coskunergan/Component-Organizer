@@ -95,11 +95,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->Export_pushButton, SIGNAL(clicked()), this, SLOT(exportFile()));
 
-    connect(componentTable, SIGNAL(showDetailsRequest(Component*)), this, SLOT(showComponentDetailsDialog(Component*)));
-    connect(componentTable, SIGNAL(editRequest(Component*)), this, SLOT(showEditComponentDialog(Component*)));
+    connect(componentTable, SIGNAL(showDetailsRequest(Component *)), this, SLOT(showComponentDetailsDialog(Component *)));
+    connect(componentTable, SIGNAL(editRequest(Component *)), this, SLOT(showEditComponentDialog(Component *)));
     connect(componentTable, SIGNAL(newComponentRequest()), this, SLOT(showAddComponentDialog()));
 
-    connect(appnoteTable, SIGNAL(editRequest(ApplicationNote*)), this, SLOT(showEditAppNoteDialog(ApplicationNote*)));
+    connect(appnoteTable, SIGNAL(editRequest(ApplicationNote *)), this, SLOT(showEditAppNoteDialog(ApplicationNote *)));
     connect(appnoteTable, SIGNAL(newApplicationNoteRequest()), this, SLOT(showAddAppNoteDialog()));
 
     m_settings.saveDimensions = false;
@@ -152,7 +152,7 @@ void MainWindow::search(QString searchText)
             foreach(Component *c, co->components())
             {
                 if(c->name().contains(searchText, Qt::CaseInsensitive) ||
-                   c->description().contains(searchText, Qt::CaseInsensitive))
+                        c->description().contains(searchText, Qt::CaseInsensitive))
                     componentTable->addComponent(c);
                 componentTable->sortByColumn(ComponentTable::NameColumn, Qt::AscendingOrder);
             }
@@ -173,7 +173,7 @@ void MainWindow::search(QString searchText)
             foreach(ApplicationNote *a, co->applicationNotes())
             {
                 if(a->description().contains(searchText, Qt::CaseInsensitive) ||
-                   a->name().contains(searchText, Qt::CaseInsensitive))
+                        a->name().contains(searchText, Qt::CaseInsensitive))
                     appnoteTable->addApplicationNote(a);
                 appnoteTable->sortByColumn(ApplicationNoteTable::DescriptionColumn, Qt::AscendingOrder);
             }
@@ -438,80 +438,80 @@ void MainWindow::closeEvent(QCloseEvent *)
 void MainWindow::exportFile()
 {
     QString filepath = QFileDialog::getSaveFileName(this,
-                                                    tr("Export Excel File"),
-                                                    "Stock_" + QDateTime::currentDateTime().toString("dd_MM_yyyy"),
-                                                    tr("Microsoft Office 2007 (*.xlsx)"));
+                       tr("Export Excel File"),
+                       "Stock_" + QDateTime::currentDateTime().toString("dd_MM_yyyy"),
+                       tr("Microsoft Office 2007 (*.xlsx)"));
 
     if(!filepath.isEmpty())
-    {        
+    {
         QAxObject *excel = new QAxObject(this);
         excel->setControl("Excel.Application");//Connect Excel control
-        excel->dynamicCall("SetVisible (bool Visible)","false");//Do not display the form
+        excel->dynamicCall("SetVisible (bool Visible)", "false"); //Do not display the form
         excel->setProperty("DisplayAlerts", false);//Do not display any warning messages. If it is true, a prompt similar to "File has been modified, whether to save" will appear when closing
         QAxObject *workbooks = excel->querySubObject("WorkBooks");//Get workbook collection
         workbooks->dynamicCall("Add");//Create a new workbook
         QAxObject *workbook = excel->querySubObject("ActiveWorkBook");//Get the current workbook
         QAxObject *worksheets = workbook->querySubObject("Sheets");//Get a collection of worksheets
-        QAxObject *worksheet = worksheets->querySubObject("Item(int)",1);//Get worksheet 1 of the worksheet collection, namely sheet1
-        QAxObject *cellA,*cellB,*cellC,*cellD,*cellE;
+        QAxObject *worksheet = worksheets->querySubObject("Item(int)", 1); //Get worksheet 1 of the worksheet collection, namely sheet1
+        QAxObject *cellA, *cellB, *cellC, *cellD, *cellE;
 
-        cellA = worksheet->querySubObject("Range(QVariant, QVariant)","A1");//Get the cell
-        cellB = worksheet->querySubObject("Range(QVariant, QVariant)","B1");
-        cellC = worksheet->querySubObject("Range(QVariant, QVariant)","C1");
-        cellD = worksheet->querySubObject("Range(QVariant, QVariant)","D1");
-        cellE = worksheet->querySubObject("Range(QVariant, QVariant)","E1");
+        cellA = worksheet->querySubObject("Range(QVariant, QVariant)", "A1"); //Get the cell
+        cellB = worksheet->querySubObject("Range(QVariant, QVariant)", "B1");
+        cellC = worksheet->querySubObject("Range(QVariant, QVariant)", "C1");
+        cellD = worksheet->querySubObject("Range(QVariant, QVariant)", "D1");
+        cellE = worksheet->querySubObject("Range(QVariant, QVariant)", "E1");
 
-        cellA->dynamicCall("SetValue(const QVariant&)",QString("Code"));//Set the value of the cell
-        cellB->dynamicCall("SetValue(const QVariant&)",QString("Description"));
-        cellC->dynamicCall("SetValue(const QVariant&)",QString("Stock"));
-        cellD->dynamicCall("SetValue(const QVariant&)",QString("Low Stock"));
-        cellE->dynamicCall("SetValue(const QVariant&)",QString("Container"));
+        cellA->dynamicCall("SetValue(const QVariant&)", QString("Code")); //Set the value of the cell
+        cellB->dynamicCall("SetValue(const QVariant&)", QString("Description"));
+        cellC->dynamicCall("SetValue(const QVariant&)", QString("Stock"));
+        cellD->dynamicCall("SetValue(const QVariant&)", QString("Low Stock"));
+        cellE->dynamicCall("SetValue(const QVariant&)", QString("Container"));
 
-        int i=1;
+        int i = 1;
         int totalStock;
         int totalLowStock;
 
         foreach(Component *c, co->components())
         {
-            QString A="A"+QString::number(i+1);//Set the cell to be operated, such as A1
-            QString B="B"+QString::number(i+1);
-            QString C="C"+QString::number(i+1);
-            QString D="D"+QString::number(i+1);
-            QString E="E"+QString::number(i+1);
+            QString A = "A" + QString::number(i + 1); //Set the cell to be operated, such as A1
+            QString B = "B" + QString::number(i + 1);
+            QString C = "C" + QString::number(i + 1);
+            QString D = "D" + QString::number(i + 1);
+            QString E = "E" + QString::number(i + 1);
 
-            cellA = worksheet->querySubObject("Range(QVariant, QVariant)",A);//Get the cell
-            cellB = worksheet->querySubObject("Range(QVariant, QVariant)",B);
-            cellC = worksheet->querySubObject("Range(QVariant, QVariant)",C);
-            cellD = worksheet->querySubObject("Range(QVariant, QVariant)",D);
-            cellE = worksheet->querySubObject("Range(QVariant, QVariant)",E);
+            cellA = worksheet->querySubObject("Range(QVariant, QVariant)", A); //Get the cell
+            cellB = worksheet->querySubObject("Range(QVariant, QVariant)", B);
+            cellC = worksheet->querySubObject("Range(QVariant, QVariant)", C);
+            cellD = worksheet->querySubObject("Range(QVariant, QVariant)", D);
+            cellE = worksheet->querySubObject("Range(QVariant, QVariant)", E);
 
-            cellA->dynamicCall("SetValue(const QVariant&)",QVariant(c->name()));
-            totalStock=0;
-            totalLowStock=0;
-            foreach(Package* p, co->getPackages())
+            cellA->dynamicCall("SetValue(const QVariant&)", QVariant(c->name()));
+            totalStock = 0;
+            totalLowStock = 0;
+            foreach(Package *p, co->getPackages())
             {
-                     Stock *s = c->stock(p->name());
-                     cellB->dynamicCall("SetValue(const QVariant&)",QVariant(c->description()));
-                     if(c->container() != 0)
-                     {
-                         cellE->dynamicCall("SetValue(const QVariant&)",QVariant(c->container()->name()));
-                     }
-                     if(s)
-                     {
-                         totalStock += s->stock();
-                         totalLowStock += s->lowValue();
-                     }
+                Stock *s = c->stock(p->name());
+                cellB->dynamicCall("SetValue(const QVariant&)", QVariant(c->description()));
+                if(c->container() != 0)
+                {
+                    cellE->dynamicCall("SetValue(const QVariant&)", QVariant(c->container()->name()));
+                }
+                if(s)
+                {
+                    totalStock += s->stock();
+                    totalLowStock += s->lowValue();
+                }
             }
-            cellC->dynamicCall("SetValue(const QVariant&)",QVariant(totalStock));
-            cellD->dynamicCall("SetValue(const QVariant&)",QVariant(totalLowStock ));
+            cellC->dynamicCall("SetValue(const QVariant&)", QVariant(totalStock));
+            cellD->dynamicCall("SetValue(const QVariant&)", QVariant(totalLowStock));
             i++;
         }
 
-        workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(filepath));//Save to filepath, be sure to use QDir::toNativeSeparators to convert "/" in the path to "\", otherwise It must not be saved.
+        workbook->dynamicCall("SaveAs(const QString&)", QDir::toNativeSeparators(filepath)); //Save to filepath, be sure to use QDir::toNativeSeparators to convert "/" in the path to "\", otherwise It must not be saved.
         workbook->dynamicCall("Close()");//Close the workbook
         excel->dynamicCall("Quit()");//Close excel
         delete excel;
-        excel=NULL;
+        excel = NULL;
         QMessageBox::about(this, "Export", "Export Done..");
     }
 }

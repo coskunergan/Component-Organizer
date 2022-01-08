@@ -101,18 +101,18 @@ void pMiniTableWidget::setRowColorHint(int row, RowColorHint hint)
 
         switch(hint)
         {
-        case defaultRowColorHint:
-            i->setBackgroundColor(m_defaultRowColor);
-            break;
-        case addRowColorHint:
-            i->setBackgroundColor(m_addRowColor);
-            break;
-        case removeRowColorHint:
-            i->setBackgroundColor(m_removeRowColor);
-            break;
-        case changeRowColorHint:
-            i->setBackgroundColor(m_changeRowColor);
-            break;
+            case defaultRowColorHint:
+                i->setBackgroundColor(m_defaultRowColor);
+                break;
+            case addRowColorHint:
+                i->setBackgroundColor(m_addRowColor);
+                break;
+            case removeRowColorHint:
+                i->setBackgroundColor(m_removeRowColor);
+                break;
+            case changeRowColorHint:
+                i->setBackgroundColor(m_changeRowColor);
+                break;
         }
     }
 }

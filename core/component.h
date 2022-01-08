@@ -39,54 +39,118 @@ public:
 
     explicit Component(const QString name, QObject *parent = 0);
 
-    int ID() { return m_ID; }
+    int ID()
+    {
+        return m_ID;
+    }
 
-    void setName(const QString &name) { m_name = name; }
-    QString name() { return m_name; }
+    void setName(const QString &name)
+    {
+        m_name = name;
+    }
+    QString name()
+    {
+        return m_name;
+    }
 
-    void setDescription(const QString description) { m_description = description; }
-    QString description() { return m_description; }
+    void setDescription(const QString description)
+    {
+        m_description = description;
+    }
+    QString description()
+    {
+        return m_description;
+    }
 
     void addDatasheet(Datasheet *datasheet);
     void removeDatasheet(Datasheet *datasheet);
     bool setDefaultDatasheet(Datasheet *datasheet);
     bool setDefaultDatasheetIndex(int index);
-    int defaultDatasheetIndex() { return m_defaultDatasheetIndex; }
-    Datasheet* defaultDatasheet();
-    Datasheet* datasheet(const QString &path);
-    QList<Datasheet *> datasheets() { return m_datasheets; }
+    int defaultDatasheetIndex()
+    {
+        return m_defaultDatasheetIndex;
+    }
+    Datasheet *defaultDatasheet();
+    Datasheet *datasheet(const QString &path);
+    QList<Datasheet *> datasheets()
+    {
+        return m_datasheets;
+    }
 
     void addStock(Stock *stock);
     void removeStock(const QString &packageName);
-    Stock* stock(const QString &packageName);
+    Stock *stock(const QString &packageName);
     QList<Stock *> stocks();
 
-    void setIgnoreStock(bool ignore) { m_ignoreStock = ignore; }
-    bool ignoreStock() { return m_ignoreStock; }
+    void setIgnoreStock(bool ignore)
+    {
+        m_ignoreStock = ignore;
+    }
+    bool ignoreStock()
+    {
+        return m_ignoreStock;
+    }
 
-    void setTotalStock(int total) { m_totalStock = total; }
-    int totalStock() { return m_totalStock; }
+    void setTotalStock(int total)
+    {
+        m_totalStock = total;
+    }
+    int totalStock()
+    {
+        return m_totalStock;
+    }
 
-    void setContainer(Container *container) { m_container = container; }
-    Container* container() { return m_container; }
+    void setContainer(Container *container)
+    {
+        m_container = container;
+    }
+    Container *container()
+    {
+        return m_container;
+    }
 
     void setLabel(int level, Label *label);
-    void setLabels(Label *primary, Label *secondary) { m_primaryLabel = primary; m_secondaryLabel = secondary; }
-    Label* primaryLabel() { return m_primaryLabel; }
-    Label* secondaryLabel() { return m_secondaryLabel; }
+    void setLabels(Label *primary, Label *secondary)
+    {
+        m_primaryLabel = primary;
+        m_secondaryLabel = secondary;
+    }
+    Label *primaryLabel()
+    {
+        return m_primaryLabel;
+    }
+    Label *secondaryLabel()
+    {
+        return m_secondaryLabel;
+    }
 
-    void setNotes(const QString &notes) { m_notes = notes; }
-    QString notes() { return m_notes; }
+    void setNotes(const QString &notes)
+    {
+        m_notes = notes;
+    }
+    QString notes()
+    {
+        return m_notes;
+    }
 
-    bool isLinked() { return (m_linkedTo != 0) ? true : false; }
-    void linkTo(Component *component) { m_linkedTo = component; }
-    Component* linkedTo() { return m_linkedTo; }
+    bool isLinked()
+    {
+        return (m_linkedTo != 0) ? true : false;
+    }
+    void linkTo(Component *component)
+    {
+        m_linkedTo = component;
+    }
+    Component *linkedTo()
+    {
+        return m_linkedTo;
+    }
 
-    
+
 signals:
-    
+
 public slots:
-    
+
 private:
     static int nextID;
 
@@ -94,8 +158,8 @@ private:
     QString m_name;
     QString m_description;
     int m_defaultDatasheetIndex;
-    QList<Datasheet*> m_datasheets;
-    QList<Stock*> m_stocks;
+    QList<Datasheet *> m_datasheets;
+    QList<Stock *> m_stocks;
     bool m_ignoreStock;
     int m_lowStock;
     int m_totalStock;

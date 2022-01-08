@@ -25,28 +25,43 @@ class Label : public QObject
 {
     Q_OBJECT
 public:
-    explicit Label(const QString &name, Label *top = 0, QList<Label*> leafs = QList<Label*>(), QObject *parent = 0);
+    explicit Label(const QString &name, Label *top = 0, QList<Label *> leafs = QList<Label *>(), QObject *parent = 0);
 
-    QString name() { return m_name; }
+    QString name()
+    {
+        return m_name;
+    }
 
-    void setTop(Label *label) { m_top = label; }
-    void addLeaf(Label *label) { m_leafs.append(label); }
+    void setTop(Label *label)
+    {
+        m_top = label;
+    }
+    void addLeaf(Label *label)
+    {
+        m_leafs.append(label);
+    }
     void removeLeaf(const QString &name);
 
-    Label* top() { return m_top; }
-    QList<Label*> leafs() { return m_leafs; }
-    Label* leaf(const QString &name);
+    Label *top()
+    {
+        return m_top;
+    }
+    QList<Label *> leafs()
+    {
+        return m_leafs;
+    }
+    Label *leaf(const QString &name);
 
 signals:
-    
+
 public slots:
 
 private:
 
     QString       m_name;
-    Label*        m_top;
-    QList<Label*> m_leafs;
-    
+    Label        *m_top;
+    QList<Label *> m_leafs;
+
 };
 
 #endif // LABEL_H

@@ -28,17 +28,19 @@ class DatasheetTable;
 class StockTable;
 class QLabel;
 
-namespace Ui {
+namespace Ui
+{
 class ComponentDialog;
 }
 
 class ComponentDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
 
-    enum Mode {
+    enum Mode
+    {
         Add = 0,
         Edit
     };
@@ -53,10 +55,13 @@ public:
     explicit ComponentDialog(CO *co, Component *toEdit, QWidget *parent = 0);
     ~ComponentDialog();
 
-    Component* component() { return m_component; }
+    Component *component()
+    {
+        return m_component;
+    }
 
     void accept();
-    
+
 private slots:
     void datasheetSourceChangedHandler();
     void browseFile();
@@ -72,7 +77,8 @@ private slots:
 
 private:
 
-    enum DatasheetSourceView {
+    enum DatasheetSourceView
+    {
         BrowseDatasheetView = 0,
         LinkDatasheetView = 1
     };
@@ -88,7 +94,7 @@ private:
     QList<QStringList> m_browsedDatasheets;
 
     void setup();
-    Datasheet* createDatasheet(int row);
+    Datasheet *createDatasheet(int row);
     void createComponent();
     void updateComponent();
     void updateDatasheets();

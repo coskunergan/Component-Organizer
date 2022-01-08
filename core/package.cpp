@@ -55,7 +55,7 @@ const QStringList Package::m_defaultNames =  //TODO sort the list
      << "1812"
      << "2010"
      << "2512"
-     
+
     );
 
 QStringList Package::defaultNames()

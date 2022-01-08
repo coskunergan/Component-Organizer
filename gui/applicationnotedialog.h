@@ -24,17 +24,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class CO;
 class ApplicationNote;
 
-namespace Ui {
+namespace Ui
+{
 class ApplicationNoteDialog;
 }
 
 class ApplicationNoteDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
 
-    enum Mode {
+    enum Mode
+    {
         Add = 0,
         Edit
     };
@@ -43,14 +45,17 @@ public:
     explicit ApplicationNoteDialog(CO *co, ApplicationNote *appnote, QWidget *parent);
     ~ApplicationNoteDialog();
 
-    ApplicationNote* applicationNote() { return m_appnote; }
+    ApplicationNote *applicationNote()
+    {
+        return m_appnote;
+    }
 
     void accept();
 
 private slots:
     void browsePDF();
     void browseattachedFile();
-    
+
 private:
     Ui::ApplicationNoteDialog *ui;
 

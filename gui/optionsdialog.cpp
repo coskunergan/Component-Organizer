@@ -150,7 +150,7 @@ void OptionsDialog::setup()
         m_manufacturerTable->addItem(row, 0, manufacturerName);
     }
 
-    connect(m_primaryLabelTable, SIGNAL(currentItemChanged(QTableWidgetItem*,QTableWidgetItem*)), this, SLOT(primaryLabelChangedHandler()));
+    connect(m_primaryLabelTable, SIGNAL(currentItemChanged(QTableWidgetItem *, QTableWidgetItem *)), this, SLOT(primaryLabelChangedHandler()));
     connect(ui->options_listWidget, SIGNAL(currentRowChanged(int)), ui->stackedWidget, SLOT(setCurrentIndex(int)));
 
     m_primaryLabelTable->setCurrentRow(0);
@@ -208,7 +208,7 @@ void OptionsDialog::accept()
     settings.showContainers = ui->showContainers_checkBox->isChecked();
     w->setSettings(settings);
 
-    done(QDialog::Accepted);    
+    done(QDialog::Accepted);
 }
 
 void OptionsDialog::primaryLabelChangedHandler()
@@ -257,7 +257,7 @@ void OptionsDialog::removeContainerHandler()
 {
     QString name = m_containerTable->currentItem()->text();
 
-    QList<Component*> usingIt;
+    QList<Component *> usingIt;
     foreach(Component *c, m_co->components())
         if(c->container() != 0 && c->container()->name() == name)
             usingIt.append(c);
@@ -301,7 +301,7 @@ void OptionsDialog::removePackageHandler()
 {
     QString name = m_packageTable->currentItem()->text();
 
-    QList<Component*> usingIt;
+    QList<Component *> usingIt;
     foreach(Component *c, m_co->components())
         if(c->stock(name) != 0)
             usingIt.append(c);
@@ -346,7 +346,7 @@ void OptionsDialog::removePrimaryLabelHandler()
 {
     QString name = m_primaryLabelTable->currentItem()->text();
 
-    QList<Component*> usingIt;
+    QList<Component *> usingIt;
     foreach(Component *c, m_co->components())
         if(c->primaryLabel() != 0 && c->primaryLabel()->name() == name)
             usingIt.append(c);
@@ -376,11 +376,11 @@ void OptionsDialog::addSecondaryLabelHandler()
     QString name = ui->secondaryLabel_lineEdit->text();
 
     int row = m_primaryLabelTable->currentRow();
-    QString topLabelName = m_primaryLabelTable->item(row,0)->text();
+    QString topLabelName = m_primaryLabelTable->item(row, 0)->text();
     Label *topLabel = m_co->findTopLabel(topLabelName);
     qDebug() << topLabel << (topLabel == 0);
 
-    if(m_co->findSecondaryLabel(topLabel,name) != 0)
+    if(m_co->findSecondaryLabel(topLabel, name) != 0)
     {
         QMessageBox::information(this,
                                  tr("Info"),
@@ -401,7 +401,7 @@ void OptionsDialog::removeSecondaryLabelHandler()
 {
     QString name = m_secondaryLabelTable->currentItem()->text();
 
-    QList<Component*> usingIt;
+    QList<Component *> usingIt;
     foreach(Component *c, m_co->components())
         if(c->secondaryLabel() != 0 && c->secondaryLabel()->name() == name)
             usingIt.append(c);
@@ -464,10 +464,10 @@ void OptionsDialog::removeManufacturerHandler()
 bool OptionsDialog::message(const QString &msg)
 {
     QMessageBox msgBox;
-    msgBox.setText(msg);    
+    msgBox.setText(msg);
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox.setDefaultButton(QMessageBox::No);
-    int b = msgBox.exec();    
+    int b = msgBox.exec();
 
     //int b = QMessageBox::question(this, tr("Confirm"), msg, QMessageBox::Yes, QMessageBox::No);
 
@@ -539,12 +539,12 @@ QString filePath;
 
 void OptionsDialog::browseFile()
 {
-    filePath = QFileDialog::getOpenFileName(this,tr("Select Excel BOM File"),"",tr("BOM (*.xlsx *.xls)"));
+    filePath = QFileDialog::getOpenFileName(this, tr("Select Excel BOM File"), "", tr("BOM (*.xlsx *.xls)"));
 
     if(!filePath.isNull())
     {
         ui->PoductFileAdr_lineEdit->setText(filePath);
-        CheckBOM();       
+        CheckBOM();
     }
     else
     {
@@ -559,28 +559,28 @@ void OptionsDialog::browseFile()
 
 void OptionsDialog::CheckBOM()
 {
-    QString str=ui->ProductBOMCount_spinBox->text();
+    QString str = ui->ProductBOMCount_spinBox->text();
     int BOMCount = str.toInt();
 
-    if(BOMCount==0)
+    if(BOMCount == 0)
     {
         ui->ProductInfo_textEdit->setText("BOM Count does not exist..");
         return;
-    }    
+    }
     ui->ProductInfo_textEdit->setText("Cheking please wait..");
     ui->PoductAdd_pushButton->setEnabled(false);
     ui->PoductCheck_pushButton->setEnabled(false);
-    ui->PoductReduce_pushButton->setEnabled(false);   
-    ui->PoductMax_pushButton->setEnabled(false); 
-    qApp->processEvents();  
+    ui->PoductReduce_pushButton->setEnabled(false);
+    ui->PoductMax_pushButton->setEnabled(false);
+    qApp->processEvents();
 
     ui->ProductInfo_textEdit->setText("File reading..\r\n");
 
-    QAxObject* excel = new QAxObject( "Excel.Application", 0 );
-    QAxObject* workbooks = excel->querySubObject( "Workbooks" );
-    QAxObject* workbook = workbooks->querySubObject( "Open(const QString&)", filePath );
-    QAxObject* sheets = workbook->querySubObject( "Worksheets" );
-    QAxObject* sheet = sheets->querySubObject( "Item( int )", 1 );
+    QAxObject *excel = new QAxObject("Excel.Application", 0);
+    QAxObject *workbooks = excel->querySubObject("Workbooks");
+    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", filePath);
+    QAxObject *sheets = workbook->querySubObject("Worksheets");
+    QAxObject *sheet = sheets->querySubObject("Item( int )", 1);
 
     bool FindComponentError = false;
     bool ReduceStockError = false;
@@ -588,48 +588,48 @@ void OptionsDialog::CheckBOM()
     int instock = 0;
     int ComponentCount = 0;
 
-    for (int row=2; row <= 999; row++)
-    {        
+    for(int row = 2; row <= 999; row++)
+    {
         //------------- StockNo Find --------------
-        QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,1);
+        QAxObject *cell = sheet->querySubObject("Cells(int,int)", row, 1);
         QString StockNo = cell->dynamicCall("Value()").toString();
-        cell = sheet->querySubObject("Cells(int,int)",row,2);
-        int CountNumber = cell->dynamicCall("Value()").toInt() * BOMCount;         
-        cell = sheet->querySubObject("Cells(int,int)",row,3);
-        QString Designator= cell->dynamicCall("Value()").toString();                
-        
-        FindComponentError=true;  
+        cell = sheet->querySubObject("Cells(int,int)", row, 2);
+        int CountNumber = cell->dynamicCall("Value()").toInt() * BOMCount;
+        cell = sheet->querySubObject("Cells(int,int)", row, 3);
+        QString Designator = cell->dynamicCall("Value()").toString();
+
+        FindComponentError = true;
 
         if(StockNo == "" && CountNumber == 0 && Designator == "")
-        {            
+        {
             break;
-        }           
+        }
 
         foreach(QString name, m_co->componentNames())
-        {            
+        {
             if(name == StockNo)
             {
-                FindComponentError=false;  
-                ComponentCount++;              
+                FindComponentError = false;
+                ComponentCount++;
                 foreach(Component *c, m_co->components())
                 {
                     if(c->name() == name)
                     {
-                        foreach(Package* p, m_co->getPackages())
+                        foreach(Package *p, m_co->getPackages())
                         {
                             Stock *s = c->stock(p->name());
                             if(s)
                             {
-                                instock = s->stock();                                            
+                                instock = s->stock();
                                 break;
                             }
-                        }                                 
+                        }
                         break;
-                    }                                          
+                    }
                 }
                 break;
             }
-        }      
+        }
         //----------------- Count Check ---------------
         if(FindComponentError == true)
         {
@@ -638,57 +638,57 @@ void OptionsDialog::CheckBOM()
             ui->ProductInfo_textEdit->append("Missing: " + StockNo  + " => " + Designator);
         }
         else
-        {      
+        {
             if(instock == 0)
             {
                 ReduceStockError = true;
                 ui->ProductInfo_textEdit->append("No Stock: " + StockNo  + " => " + Designator + "(-" + QString::number(CountNumber) + ")");
             }
             else if(instock < CountNumber)
-            {                        
-                ReduceStockError = true;      
+            {
+                ReduceStockError = true;
                 ui->ProductInfo_textEdit->append("Low Stock: " + StockNo  + " => " + Designator + "(-" + QString::number(CountNumber - instock) + ")");
             }
         }
-        //---------------------------------------------          
+        //---------------------------------------------
     }
     workbook->dynamicCall("Close()");
     excel->dynamicCall("Quit()");
-    ui->PoductCheck_pushButton->setEnabled(true);  
-    ui->PoductMax_pushButton->setEnabled(true);    
+    ui->PoductCheck_pushButton->setEnabled(true);
+    ui->PoductMax_pushButton->setEnabled(true);
     if(ReduceStockError == false)
     {
-        ui->PoductReduce_pushButton->setEnabled(true);      
+        ui->PoductReduce_pushButton->setEnabled(true);
     }
     if(AddStockError == false)
     {
-        ui->PoductAdd_pushButton->setEnabled(true);        
+        ui->PoductAdd_pushButton->setEnabled(true);
     }
     if(ComponentCount && AddStockError == false && ReduceStockError == false)
     {
-        ui->ProductInfo_textEdit->append("Has a enough stock.");        
-    }    
+        ui->ProductInfo_textEdit->append("Has a enough stock.");
+    }
     ui->ProductInfo_textEdit->append("\r\nCheking done...");
 }
 
 void OptionsDialog::ReduceBOM()
 {
-    QString str=ui->ProductBOMCount_spinBox->text();
+    QString str = ui->ProductBOMCount_spinBox->text();
     int BOMCount = str.toInt();
 
-    if(BOMCount==0)
+    if(BOMCount == 0)
     {
         ui->ProductInfo_textEdit->setText("BOM Count does not exist..");
         return;
-    }    
+    }
 
     if(!message(tr("Do you want to REDUCE the BOM list?")))
     {
         ui->ProductInfo_textEdit->setText("Cancelled..");
         return;
-    }                   
+    }
 
-    ui->ProductInfo_textEdit->setText("Reducing please wait..");    
+    ui->ProductInfo_textEdit->setText("Reducing please wait..");
     ui->PoductAdd_pushButton->setEnabled(false);
     ui->PoductCheck_pushButton->setEnabled(false);
     ui->PoductReduce_pushButton->setEnabled(false);
@@ -697,23 +697,23 @@ void OptionsDialog::ReduceBOM()
 
     ui->ProductInfo_textEdit->setText("File Open..\r\n");
 
-    QAxObject* excel = new QAxObject( "Excel.Application", 0 );
-    QAxObject* workbooks = excel->querySubObject( "Workbooks" );
-    QAxObject* workbook = workbooks->querySubObject( "Open(const QString&)", filePath );
-    QAxObject* sheets = workbook->querySubObject( "Worksheets" );
-    QAxObject* sheet = sheets->querySubObject( "Item( int )", 1 );
+    QAxObject *excel = new QAxObject("Excel.Application", 0);
+    QAxObject *workbooks = excel->querySubObject("Workbooks");
+    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", filePath);
+    QAxObject *sheets = workbook->querySubObject("Worksheets");
+    QAxObject *sheet = sheets->querySubObject("Item( int )", 1);
 
     bool FindStock = false;
 
-    for (int row=2; row <= 999; row++)
-    {        
+    for(int row = 2; row <= 999; row++)
+    {
         //------------- StockNo Find --------------
-        QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,1);
+        QAxObject *cell = sheet->querySubObject("Cells(int,int)", row, 1);
         QString StockNo = cell->dynamicCall("Value()").toString();
-        cell = sheet->querySubObject("Cells(int,int)",row,2);
-        int CountNumber = cell->dynamicCall("Value()").toInt() * BOMCount;         
-        cell = sheet->querySubObject("Cells(int,int)",row,3);
-        QString Designator= cell->dynamicCall("Value()").toString();        
+        cell = sheet->querySubObject("Cells(int,int)", row, 2);
+        int CountNumber = cell->dynamicCall("Value()").toInt() * BOMCount;
+        cell = sheet->querySubObject("Cells(int,int)", row, 3);
+        QString Designator = cell->dynamicCall("Value()").toString();
 
         if(StockNo == "" && CountNumber == 0 && Designator == "")
         {
@@ -722,29 +722,29 @@ void OptionsDialog::ReduceBOM()
                 ui->ProductInfo_textEdit->append("Reduce done...");
             }
             break;
-        }        
+        }
         FindStock = false;
         foreach(QString name, m_co->componentNames())
-        {            
+        {
             if(name == StockNo)
             {
-                FindStock=true;
+                FindStock = true;
                 foreach(Component *c, m_co->components())
                 {
                     if(c->name() == name)
                     {
-                        foreach(Package* p, m_co->getPackages())
+                        foreach(Package *p, m_co->getPackages())
                         {
                             Stock *s = c->stock(p->name());
                             if(s)
-                            {                                
-                                s->setStock(s->stock() - CountNumber);                                             
+                            {
+                                s->setStock(s->stock() - CountNumber);
                                 c->setTotalStock(c->totalStock() - CountNumber);
                                 break;
                             }
-                        }                         
+                        }
                     }
-                }                                                     
+                }
                 break;
             }
         }
@@ -758,23 +758,23 @@ void OptionsDialog::ReduceBOM()
 }
 
 void OptionsDialog::AddBOM()
-{  
-    QString str=ui->ProductBOMCount_spinBox->text();
+{
+    QString str = ui->ProductBOMCount_spinBox->text();
     int BOMCount = str.toInt();
 
-    if(BOMCount==0)
+    if(BOMCount == 0)
     {
         ui->ProductInfo_textEdit->setText("BOM Count does not exist..");
         return;
-    }    
+    }
 
     if(!message(tr("Do you want to Add the BOM list.")))
     {
         ui->ProductInfo_textEdit->setText("Cancelled..");
         return;
-    }         
+    }
 
-    ui->ProductInfo_textEdit->setText("Adding please wait.."); 
+    ui->ProductInfo_textEdit->setText("Adding please wait..");
     ui->PoductAdd_pushButton->setEnabled(false);
     ui->PoductCheck_pushButton->setEnabled(false);
     ui->PoductReduce_pushButton->setEnabled(false);
@@ -783,23 +783,23 @@ void OptionsDialog::AddBOM()
 
     ui->ProductInfo_textEdit->setText("File Open..\r\n");
 
-    QAxObject* excel = new QAxObject( "Excel.Application", 0 );
-    QAxObject* workbooks = excel->querySubObject( "Workbooks" );
-    QAxObject* workbook = workbooks->querySubObject( "Open(const QString&)", filePath );
-    QAxObject* sheets = workbook->querySubObject( "Worksheets" );
-    QAxObject* sheet = sheets->querySubObject( "Item( int )", 1 );
+    QAxObject *excel = new QAxObject("Excel.Application", 0);
+    QAxObject *workbooks = excel->querySubObject("Workbooks");
+    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", filePath);
+    QAxObject *sheets = workbook->querySubObject("Worksheets");
+    QAxObject *sheet = sheets->querySubObject("Item( int )", 1);
 
     bool FindStock = false;
 
-    for (int row=2; row <= 999; row++)
-    {        
+    for(int row = 2; row <= 999; row++)
+    {
         //------------- StockNo Find --------------
-        QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,1);
+        QAxObject *cell = sheet->querySubObject("Cells(int,int)", row, 1);
         QString StockNo = cell->dynamicCall("Value()").toString();
-        cell = sheet->querySubObject("Cells(int,int)",row,2);
-        int CountNumber = cell->dynamicCall("Value()").toInt() * BOMCount;         
-        cell = sheet->querySubObject("Cells(int,int)",row,3);
-        QString Designator= cell->dynamicCall("Value()").toString();        
+        cell = sheet->querySubObject("Cells(int,int)", row, 2);
+        int CountNumber = cell->dynamicCall("Value()").toInt() * BOMCount;
+        cell = sheet->querySubObject("Cells(int,int)", row, 3);
+        QString Designator = cell->dynamicCall("Value()").toString();
 
         if(StockNo == "" && CountNumber == 0 && Designator == "")
         {
@@ -808,29 +808,29 @@ void OptionsDialog::AddBOM()
                 ui->ProductInfo_textEdit->append("Add done...");
             }
             break;
-        }        
+        }
         FindStock = false;
         foreach(QString name, m_co->componentNames())
-        {            
+        {
             if(name == StockNo)
             {
-                FindStock=true;
+                FindStock = true;
                 foreach(Component *c, m_co->components())
                 {
                     if(c->name() == name)
                     {
-                        foreach(Package* p, m_co->getPackages())
+                        foreach(Package *p, m_co->getPackages())
                         {
                             Stock *s = c->stock(p->name());
                             if(s)
                             {
-                                s->setStock(s->stock() + CountNumber);     
-                                c->setTotalStock(c->totalStock() + CountNumber);                                        
+                                s->setStock(s->stock() + CountNumber);
+                                c->setTotalStock(c->totalStock() + CountNumber);
                                 break;
                             }
-                        }                         
+                        }
                     }
-                }                                                     
+                }
                 break;
             }
         }
@@ -840,26 +840,26 @@ void OptionsDialog::AddBOM()
 
     ui->PoductAdd_pushButton->setEnabled(true);
     ui->PoductCheck_pushButton->setEnabled(true);
-    ui->PoductReduce_pushButton->setEnabled(true);  
-    ui->PoductMax_pushButton->setEnabled(true);  
+    ui->PoductReduce_pushButton->setEnabled(true);
+    ui->PoductMax_pushButton->setEnabled(true);
 }
 
 void OptionsDialog::MaximumBOMCalc()
-{    
+{
     ui->PoductAdd_pushButton->setEnabled(false);
     ui->PoductCheck_pushButton->setEnabled(false);
-    ui->PoductReduce_pushButton->setEnabled(false);   
-    ui->PoductMax_pushButton->setEnabled(false);     
+    ui->PoductReduce_pushButton->setEnabled(false);
+    ui->PoductMax_pushButton->setEnabled(false);
 
     ui->ProductInfo_textEdit->setText("Calculating..\r\n");
 
-    qApp->processEvents();  
+    qApp->processEvents();
 
-    QAxObject* excel = new QAxObject( "Excel.Application", 0 );
-    QAxObject* workbooks = excel->querySubObject( "Workbooks" );
-    QAxObject* workbook = workbooks->querySubObject( "Open(const QString&)", filePath );
-    QAxObject* sheets = workbook->querySubObject( "Worksheets" );
-    QAxObject* sheet = sheets->querySubObject( "Item( int )", 1 );
+    QAxObject *excel = new QAxObject("Excel.Application", 0);
+    QAxObject *workbooks = excel->querySubObject("Workbooks");
+    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", filePath);
+    QAxObject *sheets = workbook->querySubObject("Worksheets");
+    QAxObject *sheet = sheets->querySubObject("Item( int )", 1);
 
     bool FindStock;
     bool ReduceStockError;
@@ -874,41 +874,41 @@ void OptionsDialog::MaximumBOMCalc()
         AddStockError = false;
         instock = 0;
 
-        for (int row=2; row <= 999; row++)
-        {        
+        for(int row = 2; row <= 999; row++)
+        {
             //------------- StockNo Find --------------
-            QAxObject* cell = sheet->querySubObject("Cells(int,int)",row,1);
+            QAxObject *cell = sheet->querySubObject("Cells(int,int)", row, 1);
             QString StockNo = cell->dynamicCall("Value()").toString();
-            cell = sheet->querySubObject("Cells(int,int)",row,2);
-            int CountNumber = cell->dynamicCall("Value()").toInt() * BOMCount;         
-            cell = sheet->querySubObject("Cells(int,int)",row,3);
-            QString Designator= cell->dynamicCall("Value()").toString();        
+            cell = sheet->querySubObject("Cells(int,int)", row, 2);
+            int CountNumber = cell->dynamicCall("Value()").toInt() * BOMCount;
+            cell = sheet->querySubObject("Cells(int,int)", row, 3);
+            QString Designator = cell->dynamicCall("Value()").toString();
 
             if(StockNo == "" && CountNumber == 0 && Designator == "")
             {
                 break;
-            }        
+            }
             FindStock = false;
             foreach(QString name, m_co->componentNames())
-            {            
+            {
                 if(name == StockNo)
                 {
-                    FindStock=true;                
+                    FindStock = true;
                     foreach(Component *c, m_co->components())
                     {
                         if(c->name() == name)
                         {
-                            foreach(Package* p, m_co->getPackages())
+                            foreach(Package *p, m_co->getPackages())
                             {
                                 Stock *s = c->stock(p->name());
                                 if(s)
                                 {
-                                    instock = s->stock();                                            
+                                    instock = s->stock();
                                     break;
                                 }
-                            }                                 
+                            }
                             break;
-                        }                                          
+                        }
                     }
                     break;
                 }
@@ -921,10 +921,10 @@ void OptionsDialog::MaximumBOMCalc()
                 break;
             }
             else
-            {      
+            {
                 if(instock < CountNumber)
-                {                        
-                    ReduceStockError = true;      
+                {
+                    ReduceStockError = true;
                     break;
                 }
             }
@@ -936,18 +936,18 @@ void OptionsDialog::MaximumBOMCalc()
         }
         else
         {
-            ui->ProductBOMCount_spinBox->setValue(BOMCount);  
+            ui->ProductBOMCount_spinBox->setValue(BOMCount);
             BOMCount++;
         }
     }
     workbook->dynamicCall("Close()");
-    excel->dynamicCall("Quit()");      
-    CheckBOM();   
+    excel->dynamicCall("Quit()");
+    CheckBOM();
 }
 
 void OptionsDialog::CheckRequest()
 {
-    ui->PoductReduce_pushButton->setEnabled(false);   
+    ui->PoductReduce_pushButton->setEnabled(false);
 }
 
 
@@ -958,7 +958,7 @@ QString PlacefilePath;
 
 void OptionsDialog::SmtBrowseBOMFile()
 {
-    BOMfilePath = QFileDialog::getOpenFileName(this,tr("Select Excel BOM File"),"",tr("BOM (*.xlsx *.xls)"));
+    BOMfilePath = QFileDialog::getOpenFileName(this, tr("Select Excel BOM File"), "", tr("BOM (*.xlsx *.xls)"));
 
     if(!BOMfilePath.isNull())
     {
@@ -982,7 +982,7 @@ void OptionsDialog::SmtBrowseBOMFile()
 
 void OptionsDialog::SmtBrowsePlaceFile()
 {
-    PlacefilePath = QFileDialog::getOpenFileName(this,tr("Select Excel PICK PLACE File"),"",tr("Place (*.xlsx *.xls)"));
+    PlacefilePath = QFileDialog::getOpenFileName(this, tr("Select Excel PICK PLACE File"), "", tr("Place (*.xlsx *.xls)"));
 
     if(!PlacefilePath.isNull())
     {

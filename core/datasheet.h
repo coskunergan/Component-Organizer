@@ -42,18 +42,33 @@ public:
 
     explicit Datasheet(const QString &path, QObject *parent = 0);
 
-    void setType(Type type) { m_type = type; }
-    Type type() { return m_type; }
+    void setType(Type type)
+    {
+        m_type = type;
+    }
+    Type type()
+    {
+        return m_type;
+    }
 
-    void setManufacturer(Manufacturer *manufacturer) { m_manufacturer = manufacturer;}
-    Manufacturer* manufacturer() { return m_manufacturer; }
+    void setManufacturer(Manufacturer *manufacturer)
+    {
+        m_manufacturer = manufacturer;
+    }
+    Manufacturer *manufacturer()
+    {
+        return m_manufacturer;
+    }
 
-    QString path() { return m_path; }
+    QString path()
+    {
+        return m_path;
+    }
 
 
-    
+
 signals:
-    
+
 public slots:
 
 private:
@@ -61,7 +76,7 @@ private:
     Manufacturer *m_manufacturer;
     QString m_path;
 
-    
+
 };
 
 #endif // DATASHEET_H

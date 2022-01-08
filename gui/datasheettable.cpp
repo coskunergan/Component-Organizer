@@ -129,7 +129,7 @@ bool DatasheetTable::hasDatasheet(Datasheet *datasheet)
             continue;
 
         if(type(row) == datasheet->type() &&
-           manufacturer(row) == datasheet->manufacturer()->name())
+                manufacturer(row) == datasheet->manufacturer()->name())
         {
             return true;
         }

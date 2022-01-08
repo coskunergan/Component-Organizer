@@ -41,7 +41,7 @@ ComponentDetails::ComponentDetails(CO *co, Component *component, QWidget *parent
     m_datasheetTable = new DatasheetTable(this);
     m_stockTable = new StockTable(this);
 
-    m_datasheetTable->setMinimumSize(400,100);
+    m_datasheetTable->setMinimumSize(400, 100);
     m_datasheetTable->setMaximumHeight(100);
     m_stockTable->setMaximumSize(240, 105);
 
@@ -54,7 +54,7 @@ ComponentDetails::~ComponentDetails()
 {
     delete m_stockTable;
     delete m_datasheetTable;
-    delete ui;    
+    delete ui;
 }
 
 void ComponentDetails::setup()
@@ -107,7 +107,7 @@ void ComponentDetails::setup()
 
     //ui->label_groupBox->hide();
 
-    connect(m_datasheetTable, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(viewDatasheetHandler()));
+    connect(m_datasheetTable, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(viewDatasheetHandler()));
     connect(m_stockTable, SIGNAL(stockChanged(int)), this, SLOT(updateStockTable()));
     connect(m_stockTable, SIGNAL(lowValueChanged(int)), this, SLOT(updateStockTable()));
 }
@@ -151,7 +151,7 @@ void ComponentDetails::accept()
     m_component->setTotalStock(total);
 
     m_component->setNotes(ui->notes_textEdit->toPlainText());
-    
+
     done(QDialog::Accepted);
 }
 

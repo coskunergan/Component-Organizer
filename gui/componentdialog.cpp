@@ -53,7 +53,7 @@ ComponentDialog::ComponentDialog(CO *co, QWidget *parent) :
 ComponentDialog::ComponentDialog(CO *co, Component *toEdit, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ComponentDialog),
-    m_co(co) ,
+    m_co(co),
     m_mode(ComponentDialog::Edit),
     m_component(toEdit)
 {
@@ -99,7 +99,8 @@ ComponentDialog::ComponentDialog(CO *co, Component *toEdit, QWidget *parent) :
         int index = ui->primaryLabel_comboBox->findText(toEdit->primaryLabel()->name());
         ui->primaryLabel_comboBox->setCurrentIndex(index);
 
-        if(toEdit->secondaryLabel() != 0){
+        if(toEdit->secondaryLabel() != 0)
+        {
             index = ui->secondaryLabel_comboBox->findText(toEdit->secondaryLabel()->name());
             ui->secondaryLabel_comboBox->setCurrentIndex(index);
         }
@@ -135,12 +136,12 @@ void ComponentDialog::setup()
     // Title
     switch(m_mode)
     {
-    case ComponentDialog::Add:
-        setWindowTitle(tr("Add Component"));
-        break;
-    case ComponentDialog::Edit:
-        setWindowTitle(tr("Edit Component"));
-        break;
+        case ComponentDialog::Add:
+            setWindowTitle(tr("Add Component"));
+            break;
+        case ComponentDialog::Edit:
+            setWindowTitle(tr("Edit Component"));
+            break;
     }
 
     // Tool buttons
@@ -232,32 +233,32 @@ void ComponentDialog::accept()
 
     switch(m_mode)
     {
-    case ComponentDialog::Add:
-        if(m_co->componentNames().contains(name, Qt::CaseInsensitive))
-        {
-            QMessageBox::critical(this, tr("Error"),
-                                  tr("A component with name \"") + name +
-                                  tr("\" already exists.") + "\n" +
-                                  tr("The component's name must be unique."),
-                                  QMessageBox::Ok);
-            return;
-        }
-        createComponent();
-        m_co->addComponent(m_component);
-        break;
-    case ComponentDialog::Edit:
-        if(m_component->name() != name &&
-           m_co->componentNames().contains(name, Qt::CaseInsensitive))
-        {
-            QMessageBox::critical(this, tr("Error"),
-                                  tr("A component with name ") + name +
-                                  tr(" already exists.") + "\n" +
-                                  tr("The component's name must be unique."),
-                                  QMessageBox::Ok);
-            return;
-        }
-        updateComponent();
-        break;
+        case ComponentDialog::Add:
+            if(m_co->componentNames().contains(name, Qt::CaseInsensitive))
+            {
+                QMessageBox::critical(this, tr("Error"),
+                                      tr("A component with name \"") + name +
+                                      tr("\" already exists.") + "\n" +
+                                      tr("The component's name must be unique."),
+                                      QMessageBox::Ok);
+                return;
+            }
+            createComponent();
+            m_co->addComponent(m_component);
+            break;
+        case ComponentDialog::Edit:
+            if(m_component->name() != name &&
+                    m_co->componentNames().contains(name, Qt::CaseInsensitive))
+            {
+                QMessageBox::critical(this, tr("Error"),
+                                      tr("A component with name ") + name +
+                                      tr(" already exists.") + "\n" +
+                                      tr("The component's name must be unique."),
+                                      QMessageBox::Ok);
+                return;
+            }
+            updateComponent();
+            break;
     }
 
     done(QDialog::Accepted);
@@ -305,7 +306,7 @@ void ComponentDialog::datasheetSourceChangedHandler()
     }
 }
 
-Datasheet* ComponentDialog::createDatasheet(int row)
+Datasheet *ComponentDialog::createDatasheet(int row)
 {
     QString filePath = "/" +
                        ui->name_lineEdit->text().toUpper() + "_" +
@@ -516,9 +517,9 @@ void ComponentDialog::updateLabels()
 void ComponentDialog::browseFile()
 {
     QString filePath = QFileDialog::getOpenFileName(this,
-                                                    tr("Select Datasheet"),
-                                                    "",
-                                                    tr("Datasheet (*.pdf)"));
+                       tr("Select Datasheet"),
+                       "",
+                       tr("Datasheet (*.pdf)"));
 
     if(!filePath.isNull())
         ui->filePath_lineEdit->setText(filePath);
@@ -561,7 +562,7 @@ void ComponentDialog::addDatasheetHandler() // TODO use addItem() instead of add
                                  tr("Info"),
                                  tr("Datasheet with same type and manufacturer already exists"),
                                  QMessageBox::Ok
-                                 );
+                                );
     }
 
     delete d;
@@ -580,15 +581,15 @@ void ComponentDialog::removeDatasheetHandler()
 
     switch(m_mode)
     {
-    case ComponentDialog::Add:
-        m_datasheetTable->removeRow(curRow);
-        break;
-    case ComponentDialog::Edit:
-        if(m_datasheetTable->rowColorHint(curRow) == DatasheetTable::addRowColorHint)
+        case ComponentDialog::Add:
             m_datasheetTable->removeRow(curRow);
-        else
-            m_datasheetTable->setRowColorHint(curRow, DatasheetTable::removeRowColorHint);
-        break;
+            break;
+        case ComponentDialog::Edit:
+            if(m_datasheetTable->rowColorHint(curRow) == DatasheetTable::addRowColorHint)
+                m_datasheetTable->removeRow(curRow);
+            else
+                m_datasheetTable->setRowColorHint(curRow, DatasheetTable::removeRowColorHint);
+            break;
     }
 
     if(m_datasheetTable->isDefaultDatasheet(curRow))
@@ -631,15 +632,15 @@ void ComponentDialog::removeStockHandler()
 
     switch(m_mode)
     {
-    case ComponentDialog::Add:
-        m_stockTable->removeRow(curRow);
-        break;
-    case ComponentDialog::Edit:
-        if(m_stockTable->rowColorHint(curRow) == StockTable::addRowColorHint)
+        case ComponentDialog::Add:
             m_stockTable->removeRow(curRow);
-        else
-            m_stockTable->setRowColorHint(curRow, StockTable::removeRowColorHint);
-        break;
+            break;
+        case ComponentDialog::Edit:
+            if(m_stockTable->rowColorHint(curRow) == StockTable::addRowColorHint)
+                m_stockTable->removeRow(curRow);
+            else
+                m_stockTable->setRowColorHint(curRow, StockTable::removeRowColorHint);
+            break;
     }
 
 
@@ -708,44 +709,44 @@ void ComponentDialog::updateInterface()
 
     switch(ui->source_comboBox->currentIndex())
     {
-    case ComponentDialog::BrowseDatasheetView:
-        ui->datasheet_widget->show();
-        ui->component_widget->hide();
-        ui->stackedWidget->setCurrentIndex(0);
+        case ComponentDialog::BrowseDatasheetView:
+            ui->datasheet_widget->show();
+            ui->component_widget->hide();
+            ui->stackedWidget->setCurrentIndex(0);
 
-        if(!ui->filePath_lineEdit->text().isEmpty())
-            ui->addDatasheet_toolButton->setEnabled(true);
-        else
-            ui->addDatasheet_toolButton->setEnabled(false);
-
-        if(!m_datasheetTable->selectedItems().isEmpty())
-        {
-            ui->editDatasheet_toolButton->setEnabled(true);
-            ui->removeDatasheet_toolButton->setEnabled(true);
-            if(m_datasheetTable->rowCount() > 1 &&
-               m_datasheetTable->rowColorHint(dCurRow) != DatasheetTable::removeRowColorHint)
-                ui->setDefaultDatasheet_toolButton->setEnabled(true);
+            if(!ui->filePath_lineEdit->text().isEmpty())
+                ui->addDatasheet_toolButton->setEnabled(true);
             else
+                ui->addDatasheet_toolButton->setEnabled(false);
+
+            if(!m_datasheetTable->selectedItems().isEmpty())
+            {
+                ui->editDatasheet_toolButton->setEnabled(true);
+                ui->removeDatasheet_toolButton->setEnabled(true);
+                if(m_datasheetTable->rowCount() > 1 &&
+                        m_datasheetTable->rowColorHint(dCurRow) != DatasheetTable::removeRowColorHint)
+                    ui->setDefaultDatasheet_toolButton->setEnabled(true);
+                else
+                    ui->setDefaultDatasheet_toolButton->setEnabled(false);
+            }
+            else
+            {
+                ui->editDatasheet_toolButton->setEnabled(false);
+                ui->removeDatasheet_toolButton->setEnabled(false);
                 ui->setDefaultDatasheet_toolButton->setEnabled(false);
-        }
-        else
-        {
+            }
+            break;
+
+        case ComponentDialog::LinkDatasheetView:
+            ui->datasheet_widget->hide();
+            ui->component_widget->show();
+            ui->stackedWidget->setCurrentIndex(1);
+
+            ui->addDatasheet_toolButton->setEnabled(false);
             ui->editDatasheet_toolButton->setEnabled(false);
             ui->removeDatasheet_toolButton->setEnabled(false);
             ui->setDefaultDatasheet_toolButton->setEnabled(false);
-        }
-        break;
-
-    case ComponentDialog::LinkDatasheetView:
-        ui->datasheet_widget->hide();
-        ui->component_widget->show();
-        ui->stackedWidget->setCurrentIndex(1);
-
-        ui->addDatasheet_toolButton->setEnabled(false);
-        ui->editDatasheet_toolButton->setEnabled(false);
-        ui->removeDatasheet_toolButton->setEnabled(false);
-        ui->setDefaultDatasheet_toolButton->setEnabled(false);
-        break;
+            break;
     }
 
     if(!m_stockTable->selectedItems().isEmpty())
