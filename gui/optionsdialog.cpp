@@ -100,6 +100,10 @@ void OptionsDialog::setup()
     product->setIcon(QIcon(":/img/chip.png"));
     ui->options_listWidget->addItem(product);
 
+    QListWidgetItem *yamaha = new QListWidgetItem(tr("Yamaha SMT"));
+    yamaha->setIcon(QIcon(":/img/chip_64x64.png"));
+    ui->options_listWidget->addItem(yamaha);
+
     m_containerTable = new pMiniTableWidget(this);
     m_containerTable->setMaximumWidth(ColumnMaxWidth);
     ui->containerPage_verticalLayout->addWidget(m_containerTable);
@@ -185,6 +189,11 @@ void OptionsDialog::setup()
     connect(ui->PoductMax_pushButton, SIGNAL(clicked()), this, SLOT(MaximumBOMCalc()));
 
     connect(ui->ProductBOMCount_spinBox, SIGNAL(valueChanged(int)), this, SLOT(CheckRequest()));
+
+    connect(ui->SmtOpenBOMFile_pushButton, SIGNAL(clicked()), this, SLOT(SmtBrowseBOMFile()));
+    connect(ui->SmtOpenPlaceFile_pushButton, SIGNAL(clicked()), this, SLOT(SmtBrowsePlaceFile()));
+    connect(ui->SmtGenerateFile_pushButton, SIGNAL(clicked()), this, SLOT(SmtGenerateFile()));
+
 
     updateInterface();
 }
@@ -940,3 +949,63 @@ void OptionsDialog::CheckRequest()
 {
     ui->PoductReduce_pushButton->setEnabled(false);   
 }
+
+
+//---------------------------------------------------
+
+QString BOMfilePath;
+QString PlacefilePath;
+
+void OptionsDialog::SmtBrowseBOMFile()
+{
+    BOMfilePath = QFileDialog::getOpenFileName(this,tr("Select Excel BOM File"),"",tr("BOM (*.xlsx *.xls)"));
+
+    if(!BOMfilePath.isNull())
+    {
+        ui->SmtBOMAdr_lineEdit->setText(BOMfilePath);
+        ui->SmtInfo_textEdit->setText("BOM file selected.");
+    }
+    else
+    {
+        ui->SmtInfo_textEdit->setText("No file selected..");
+    }
+    if(ui->SmtBOMAdr_lineEdit->text() != "" && ui->SmtPlaceAdr_lineEdit->text() != "")
+    {
+        ui->SmtGenerateFile_pushButton->setEnabled(true);
+        ui->SmtInfo_textEdit->setText("Ready to generate..");
+    }
+    else
+    {
+        ui->SmtInfo_textEdit->append("Please select the Place file...");
+    }
+}
+
+void OptionsDialog::SmtBrowsePlaceFile()
+{
+    PlacefilePath = QFileDialog::getOpenFileName(this,tr("Select Excel PICK PLACE File"),"",tr("Place (*.xlsx *.xls)"));
+
+    if(!PlacefilePath.isNull())
+    {
+        ui->SmtPlaceAdr_lineEdit->setText(PlacefilePath);
+        ui->SmtInfo_textEdit->setText("Place file selected.");
+    }
+    else
+    {
+        ui->SmtInfo_textEdit->setText("No file selected..");
+    }
+    if(ui->SmtBOMAdr_lineEdit->text() != "" && ui->SmtPlaceAdr_lineEdit->text() != "")
+    {
+        ui->SmtGenerateFile_pushButton->setEnabled(true);
+        ui->SmtInfo_textEdit->setText("Ready to generate..");
+    }
+    else
+    {
+        ui->SmtInfo_textEdit->append("Please select the BOM file...");
+    }
+}
+
+void OptionsDialog::SmtGenerateFile()
+{
+    ui->SmtInfo_textEdit->setText("Generate done..");
+}
+

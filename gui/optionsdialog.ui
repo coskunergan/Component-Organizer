@@ -18,12 +18,15 @@
     <enum>QLayout::SetFixedSize</enum>
    </property>
    <property name="margin">
-    <number>5</number>
+    <number>6</number>
    </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QListWidget" name="options_listWidget">
          <property name="sizePolicy">
@@ -49,7 +52,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>5</number>
+          <number>6</number>
          </property>
          <widget class="QWidget" name="page">
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -568,7 +571,7 @@
           <widget class="QLabel" name="label">
            <property name="geometry">
             <rect>
-             <x>69</x>
+             <x>50</x>
              <y>43</y>
              <width>61</width>
              <height>16</height>
@@ -609,7 +612,7 @@
             <rect>
              <x>0</x>
              <y>70</y>
-             <width>241</width>
+             <width>231</width>
              <height>291</height>
             </rect>
            </property>
@@ -623,7 +626,7 @@
            </property>
            <property name="geometry">
             <rect>
-             <x>200</x>
+             <x>190</x>
              <y>39</y>
              <width>41</width>
              <height>23</height>
@@ -639,7 +642,7 @@
            </property>
            <property name="geometry">
             <rect>
-             <x>133</x>
+             <x>120</x>
              <y>40</y>
              <width>61</width>
              <height>22</height>
@@ -653,6 +656,127 @@
            </property>
            <property name="value">
             <number>1</number>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="Yamaha">
+          <widget class="QPushButton" name="SmtOpenBOMFile_pushButton">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>8</y>
+             <width>75</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Open BOM</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="SmtBOMAdr_lineEdit">
+           <property name="geometry">
+            <rect>
+             <x>80</x>
+             <y>10</y>
+             <width>151</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="SmtPlaceAdr_lineEdit">
+           <property name="geometry">
+            <rect>
+             <x>80</x>
+             <y>40</y>
+             <width>151</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="SmtOpenPlaceFile_pushButton">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>40</y>
+             <width>75</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Open Place</string>
+           </property>
+          </widget>
+          <widget class="QTextEdit" name="SmtInfo_textEdit">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>100</y>
+             <width>231</width>
+             <height>281</height>
+            </rect>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="SmtGenerateFile_pushButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>72</y>
+             <width>75</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Generate TXT</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_2">
+           <property name="geometry">
+            <rect>
+             <x>85</x>
+             <y>74</y>
+             <width>51</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Pcb Name:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="SmtPcbName_lineEdit">
+           <property name="geometry">
+            <rect>
+             <x>140</x>
+             <y>74</y>
+             <width>91</width>
+             <height>20</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>GTMxxx01</string>
+           </property>
+           <property name="maxLength">
+            <number>24</number>
+           </property>
+           <property name="echoMode">
+            <enum>QLineEdit::Normal</enum>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>false</bool>
            </property>
           </widget>
          </widget>

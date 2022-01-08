@@ -62,6 +62,9 @@ private slots:
     void MaximumBOMCalc();
     void CheckRequest();
     void updateInterface();
+    void SmtBrowseBOMFile();
+    void SmtBrowsePlaceFile();
+    void SmtGenerateFile();
     
 private:
 

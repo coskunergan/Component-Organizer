@@ -27,5 +27,6 @@ const QString CO_DATA_PATH      = "/../data";
 const QString CO_DATASHEET_PATH = CO_DATA_PATH + "/datasheet";
 const QString CO_APPNOTE_PATH   = CO_DATA_PATH + "/appnote";
 const QString CO_XML_PATH       = CO_DATA_PATH + "/data.xml";
+const QString CO_SMT_PROFILE_PATH  = CO_DATA_PATH + "/profiles";
 
 #endif // CO_DEFS_H
