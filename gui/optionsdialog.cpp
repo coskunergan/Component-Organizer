@@ -967,12 +967,12 @@ void OptionsDialog::SmtBrowseBOMFile()
     }
     else
     {
-        ui->SmtInfo_textEdit->setText("No file selected..");
+        ui->SmtInfo_textEdit->setText("No file selected...");
     }
     if(ui->SmtBOMAdr_lineEdit->text() != "" && ui->SmtPlaceAdr_lineEdit->text() != "")
     {
         ui->SmtGenerateFile_pushButton->setEnabled(true);
-        ui->SmtInfo_textEdit->setText("Ready to generate..");
+        ui->SmtInfo_textEdit->setText("Ready to generate...");
     }
     else
     {
@@ -991,12 +991,12 @@ void OptionsDialog::SmtBrowsePlaceFile()
     }
     else
     {
-        ui->SmtInfo_textEdit->setText("No file selected..");
+        ui->SmtInfo_textEdit->setText("No file selected...");
     }
     if(ui->SmtBOMAdr_lineEdit->text() != "" && ui->SmtPlaceAdr_lineEdit->text() != "")
     {
         ui->SmtGenerateFile_pushButton->setEnabled(true);
-        ui->SmtInfo_textEdit->setText("Ready to generate..");
+        ui->SmtInfo_textEdit->setText("Ready to generate...");
     }
     else
     {
@@ -1006,6 +1006,116 @@ void OptionsDialog::SmtBrowsePlaceFile()
 
 void OptionsDialog::SmtGenerateFile()
 {
-    ui->SmtInfo_textEdit->setText("Generate done..");
+    ui->SmtInfo_textEdit->setText("Generatig please wait...");
+    qApp->processEvents();
+    //---------------------------------
+    ui->SmtInfo_textEdit->append("BOM File reading.");
+    QAxObject *excel = new QAxObject("Excel.Application", 0);
+    QAxObject *workbooks = excel->querySubObject("Workbooks");
+    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", BOMfilePath);
+    QAxObject *sheets = workbook->querySubObject("Worksheets");
+    QAxObject *sheet = sheets->querySubObject("Item( int )", 1);
+
+    QStringList ERP_list;
+    QStringList BomDesignetor_list;
+
+    for(int row = 2; row <= 999; row++)
+    {
+        QAxObject *cell = sheet->querySubObject("Cells(int,int)", row, 1);
+        ERP_list.append(cell->dynamicCall("Value()").toString());
+        cell = sheet->querySubObject("Cells(int,int)", row, 3);
+        BomDesignetor_list.append(cell->dynamicCall("Value()").toString());
+
+        if(cell->dynamicCall("Value()").toString() == "")
+        {
+            break;
+        }
+    }
+    workbook->dynamicCall("Close()");
+    excel->dynamicCall("Quit()");
+    ui->SmtInfo_textEdit->append("BOM File read done...");
+    //---------------------------------
+    ui->SmtInfo_textEdit->append("Place File reading.");
+
+    excel = new QAxObject("Excel.Application", 0);
+    workbooks = excel->querySubObject("Workbooks");
+    workbook = workbooks->querySubObject("Open(const QString&)", PlacefilePath);
+    sheets = workbook->querySubObject("Worksheets");
+    sheet = sheets->querySubObject("Item( int )", 1);
+
+    QStringList CenterX_list;
+    QStringList CenterY_list;
+    QStringList Rotation_list;
+    QStringList PlaceDesignator_list;
+    QStringList PlaceERP_list;
+    QStringList Footprint_list;
+    QString Result;
+
+    for(int row = 2; row <= 999; row++)
+    {
+        QAxObject *cell = sheet->querySubObject("Cells(int,int)", row, 1);
+        Result = cell->dynamicCall("Value()").toString();
+        if(Result == "")
+        {
+            break;
+        }
+        CenterX_list.append(Result);
+        cell = sheet->querySubObject("Cells(int,int)", row, 2);
+        CenterY_list.append(cell->dynamicCall("Value()").toString());
+        cell = sheet->querySubObject("Cells(int,int)", row, 3);
+        Rotation_list.append(cell->dynamicCall("Value()").toString());
+        cell = sheet->querySubObject("Cells(int,int)", row, 5);
+        PlaceDesignator_list.append(cell->dynamicCall("Value()").toString());
+        cell = sheet->querySubObject("Cells(int,int)", row, 6);
+        Footprint_list.append(cell->dynamicCall("Value()").toString());
+    }
+    workbook->dynamicCall("Close()");
+    excel->dynamicCall("Quit()");
+    ui->SmtInfo_textEdit->append("Place File read done...");
+    QStringList Profile_list;
+    //----------------------------------
+    foreach(QString PlaceDesignator, PlaceDesignator_list)
+    {
+        for(int i = 0; i < BomDesignetor_list.size(); ++i)
+        {
+            Result = BomDesignetor_list.at(i).toLocal8Bit().constData();
+            if(Result.contains(PlaceDesignator))
+            {
+                Result = ERP_list.at(i).toLocal8Bit().constData();
+                if(Result == "")
+                {
+                    ui->SmtInfo_textEdit->append("ERROR Missing ERP Number;");
+                    ui->SmtInfo_textEdit->append(PlaceDesignator);
+                    return;
+                }
+                PlaceERP_list.append(Result);
+                bool skip = false;
+                foreach(QString str, Profile_list)
+                {
+                    if(str == Result)
+                    {
+                        skip = true;
+                        break;
+                    }
+                }
+                if(skip == false)
+                {
+                    Profile_list.append(Result);
+                }
+                Result.append("=");// test
+                Result.append(PlaceDesignator);// test
+                ui->SmtInfo_textEdit->append(Result);// test
+                break;
+            }
+        }
+    }
+
+    //----------------------------------
+    for(int i = 0; i < Profile_list.size() ; ++i)
+    {
+        Result = Profile_list.at(i).toLocal8Bit().constData();
+        ui->SmtInfo_textEdit->append(Result);// test
+    }
+    //----------------------------------
 }
 
