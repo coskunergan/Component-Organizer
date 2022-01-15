@@ -1004,6 +1004,7 @@ void OptionsDialog::SmtBrowsePlaceFile()
     }
 }
 
+
 void OptionsDialog::SmtGenerateFile()
 {
     ui->SmtInfo_textEdit->setText("Generatig please wait...");
@@ -1048,7 +1049,10 @@ void OptionsDialog::SmtGenerateFile()
     QStringList Rotation_list;
     QStringList PlaceDesignator_list;
     QStringList PlaceERP_list;
-    QStringList Footprint_list;
+    QStringList ProfileName_list;
+    QStringList ProfileContent_list;
+    QStringList PlaceHead_list;
+    //QStringList Footprint_list;
     QString Result;
 
     for(int row = 2; row <= 999; row++)
@@ -1064,15 +1068,28 @@ void OptionsDialog::SmtGenerateFile()
         CenterY_list.append(cell->dynamicCall("Value()").toString());
         cell = sheet->querySubObject("Cells(int,int)", row, 3);
         Rotation_list.append(cell->dynamicCall("Value()").toString());
-        cell = sheet->querySubObject("Cells(int,int)", row, 5);
+        cell = sheet->querySubObject("Cells(int,int)", row, 4);
         PlaceDesignator_list.append(cell->dynamicCall("Value()").toString());
-        cell = sheet->querySubObject("Cells(int,int)", row, 6);
-        Footprint_list.append(cell->dynamicCall("Value()").toString());
+        //cell = sheet->querySubObject("Cells(int,int)", row, 5);
+        //Footprint_list.append(cell->dynamicCall("Value()").toString());
     }
     workbook->dynamicCall("Close()");
     excel->dynamicCall("Quit()");
     ui->SmtInfo_textEdit->append("Place File read done...");
-    QStringList Profile_list;
+    //--------------------------------
+    // Read Temp file
+    QFile file(m_co->dirPath() + CO_SMT_PROFILE_PATH + "/board_temp.txt");
+    QString FileStr;
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        FileStr.append(file.readAll());
+    }
+    else
+    {
+        ui->SmtInfo_textEdit->setText("temp file error");
+        return;
+    }
+    file.close();
     //----------------------------------
     foreach(QString PlaceDesignator, PlaceDesignator_list)
     {
@@ -1090,7 +1107,7 @@ void OptionsDialog::SmtGenerateFile()
                 }
                 PlaceERP_list.append(Result);
                 bool skip = false;
-                foreach(QString str, Profile_list)
+                foreach(QString str, ProfileName_list)
                 {
                     if(str == Result)
                     {
@@ -1100,22 +1117,209 @@ void OptionsDialog::SmtGenerateFile()
                 }
                 if(skip == false)
                 {
-                    Profile_list.append(Result);
+                    ProfileName_list.append(Result);
+                    QFile Pfile(m_co->dirPath() + CO_SMT_PROFILE_PATH + '/' + Result + ".txt");
+                    QString ProfileFileStr;
+                    if(Pfile.open(QIODevice::ReadOnly | QIODevice::Text))
+                    {
+                        ProfileFileStr.append(Pfile.readAll());
+                        Pfile.close();
+                        ProfileContent_list.append(ProfileFileStr);
+                        int point = ProfileFileStr.indexOf("HEAD");
+                        if(point == -1)
+                        {
+                            ui->SmtInfo_textEdit->setText(Result + ".txt file missing head info!");
+                            return;
+                        }
+                        QString heads;
+                        while(ProfileFileStr.at(point) != ' ')
+                        {
+                            if(ProfileFileStr.at(point) >= '1' && ProfileFileStr.at(point) <= '8')
+                            {
+                                heads.append(ProfileFileStr.at(point));
+                            }
+                            point++;
+                        }
+                        PlaceHead_list.append(heads);
+                        //Added Profile file
+                        point = FileStr.indexOf("End_of_FD");
+                        FileStr.insert(point,ProfileFileStr);
+                    }
+                    else
+                    {
+                        ui->SmtInfo_textEdit->setText(Result + ".txt file read error!");
+                        Pfile.close();
+                        return;
+                    }
                 }
-                Result.append("=");// test
-                Result.append(PlaceDesignator);// test
-                ui->SmtInfo_textEdit->append(Result);// test
+                //Result.append("=");// test
+                //Result.append(PlaceDesignator);// test
+                //ui->SmtInfo_textEdit->append(Result);// test
                 break;
             }
         }
     }
 
-    //----------------------------------
-    for(int i = 0; i < Profile_list.size() ; ++i)
+    // Write to prj name
+    if(ReplaceStr(&FileStr,"PCBNAME=",ui->SmtPcbName_lineEdit->text()) == false)
     {
-        Result = Profile_list.at(i).toLocal8Bit().constData();
-        ui->SmtInfo_textEdit->append(Result);// test
+        ui->SmtInfo_textEdit->setText("temp file cannot read PCBNAME!");
+        return;
     }
+
+    // Prepare cordinat str
+    QString PrepareStr;
+    QString TempStr;
+    int HeadShifter[PlaceHead_list.size()];
+
+    for(int i = 0; i< PlaceHead_list.size(); i++)
+    {
+        HeadShifter[i]= 0;
+    }
+
+    for(int i = 0; i < CenterX_list.size(); ++i)
+    {
+        TempStr = CenterX_list.at(i).toLocal8Bit().constData();
+        if(PrepareStrNumber(TempStr,&Result) == false)
+        {
+            ui->SmtInfo_textEdit->setText("Wrong number of Xcontent error.");
+            return;
+        }
+        PrepareStr.append(Result);
+        TempStr = CenterY_list.at(i).toLocal8Bit().constData();
+        if(PrepareStrNumber(TempStr,&Result) == false)
+        {
+            ui->SmtInfo_textEdit->setText("Wrong number of Ycontent error.");
+            return;
+        }
+        PrepareStr.append(Result);
+        if(PrepareStrNumber("0.00",&Result) == false)
+        {
+            ui->SmtInfo_textEdit->setText("Wrong number of 0content error.");
+            return;
+        }
+        PrepareStr.append(Result);
+        TempStr = Rotation_list.at(i).toLocal8Bit().constData();
+        if(TempStr == "360")
+        {
+            TempStr ="0";
+        }
+        TempStr.append(".00");
+        if(PrepareStrNumber(TempStr,&Result) == false)
+        {
+            ui->SmtInfo_textEdit->setText("Wrong number of Rot content error.");
+            return;
+        }
+        PrepareStr.append(Result);
+
+        PrepareStr.append("0A0000FFFF0001000");
+
+        for(int j = 0; j < ProfileName_list.size(); ++j )
+        {
+            QString profilenametemp = ProfileName_list.at(j).toLocal8Bit().constData();
+            QString placeerptemp = PlaceERP_list.at(i).toLocal8Bit().constData();
+            if(profilenametemp == placeerptemp)
+            {
+                QString headStr = PlaceHead_list.at(j).toLocal8Bit().constData();
+                QString number = headStr.at(HeadShifter[j]);
+                int temp = number.toInt();
+                HeadShifter[j]++;
+                if(HeadShifter[j] >= headStr.size())
+                {
+                    HeadShifter[j]=0;
+                }
+                PrepareStr.append(QString::number(temp));//number of head
+
+                PrepareStr.append("00FFFF0000000");
+
+                PrepareStr.append(QString::number(j));//number of profile
+
+                break;
+            }
+        }
+
+        PrepareStr.append(' ');
+
+        TempStr = "                   \n";
+        Result = PlaceDesignator_list.at(i).toLocal8Bit().constData();
+        TempStr.replace(0, Result.size(),Result);
+
+        Result = PlaceERP_list.at(i).toLocal8Bit().constData();
+        TempStr.replace(9, Result.size(),Result);
+
+        PrepareStr.append(TempStr);
+    }
+
+
+    int point = FileStr.indexOf("&B.OPT");
+    FileStr.insert(point,PrepareStr);
+    ui->SmtInfo_textEdit->setText(FileStr);
+
+
+    /*
+    QStringList fields = line.split("\n");  
+
+    QString str = fields.at(0).toLocal8Bit().constData();
+    
+    QString name = ui->SmtPcbName_lineEdit->text();
+    str.replace(8, name.size(), name );
+
+    ui->SmtInfo_textEdit->setText(str);
+    */
+    return;
+
+        ui->SmtInfo_textEdit->setText("");
+     for(int i = 0; i < PlaceHead_list.size() ; ++i)
+     {
+         Result = PlaceHead_list.at(i).toLocal8Bit().constData();
+         ui->SmtInfo_textEdit->append(Result);// test
+     }
     //----------------------------------
+}
+
+
+bool OptionsDialog::ReplaceStr(QString *filestr, QString target, QString newstr)
+{
+    int point = filestr->indexOf(target);
+
+    if(point == -1)
+    {
+        return false;
+    }
+
+    filestr->replace(target.size() + point, newstr.size(), newstr );
+
+    return true;
+}
+
+bool OptionsDialog::PrepareStrNumber(QString numberstr, QString *result)
+{
+    int point = numberstr.indexOf('.');
+    QString tempStr;
+    tempStr.append("        ");
+    switch(point)
+    {
+        case 0:
+        return false;
+        case 1:
+        tempStr.replace(4, numberstr.size(), numberstr );
+        break;
+        case 2:
+        tempStr.replace(3, numberstr.size(), numberstr );
+        break;
+        case 3:
+        tempStr.replace(2, numberstr.size(), numberstr );
+        break;
+        case 4:
+        tempStr.replace(1, numberstr.size(), numberstr );
+        break;
+        case 5:
+        tempStr.replace(0, numberstr.size(), numberstr );
+        break;
+    }
+    tempStr.resize(8);
+    tempStr.append(' ');
+    *result = tempStr;
+    return true;
 }
 

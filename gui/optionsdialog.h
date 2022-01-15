@@ -66,6 +66,8 @@ private slots:
     void SmtBrowseBOMFile();
     void SmtBrowsePlaceFile();
     void SmtGenerateFile();
+    bool ReplaceStr(QString *filestr, QString target, QString newstr);
+    bool PrepareStrNumber(QString numberstr, QString *result);
 
 private:
 
