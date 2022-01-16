@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHeaderView>
 
 #include <QDebug>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -407,16 +409,28 @@ void MainWindow::about()
 {
     QString text;
 
-    text.append("Component Organizer " + CO_VERSION);
+    text.append("Component Organizer " + CO_VERSION + "\n");
     text.append("\nBuilt with Qt " + QString(QT_VERSION_STR) + " ");
     text.append("(" + QDateTime::currentDateTime().toString("dd/MM/yyyy") + ")");
     text.append("\n");
     text.append("\nThis is OPEN SOURCE software as defined by the GPLv3 (or later). Feel free to contribute!");
     text.append("\n");
-    text.append("\nModified by Coskun Ergan\n");
+    text.append("\nModified fork by Coskun Ergan.\n");
     text.append("\nhttps://github.com/coskunergan/Component-Organizer.git");
 
-    QMessageBox::about(this, "About", text);
+    QMessageBox msgBox;
+
+    msgBox.setText(text);
+
+    QPushButton *connectButton = msgBox.addButton(tr("Open link"), QMessageBox::ActionRole);
+
+    msgBox.exec();
+
+    if(msgBox.clickedButton() == connectButton)
+    {
+        QString link = "https://github.com/coskunergan/Component-Organizer.git";
+        QDesktopServices::openUrl(QUrl(link));
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *)

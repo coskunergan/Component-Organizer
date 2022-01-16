@@ -1143,7 +1143,7 @@ void OptionsDialog::SmtGenerateFile()
                         PlaceHead_list.append(heads);
                         //Added Profile file
                         point = FileStr.indexOf("End_of_FD");
-                        FileStr.insert(point,ProfileFileStr);
+                        FileStr.insert(point, ProfileFileStr);
                     }
                     else
                     {
@@ -1161,7 +1161,7 @@ void OptionsDialog::SmtGenerateFile()
     }
 
     // Write to prj name
-    if(ReplaceStr(&FileStr,"PCBNAME=",ui->SmtPcbName_lineEdit->text()) == false)
+    if(ReplaceStr(&FileStr, "PCBNAME=", ui->SmtPcbName_lineEdit->text()) == false)
     {
         ui->SmtInfo_textEdit->setText("temp file cannot read PCBNAME!");
         return;
@@ -1172,28 +1172,28 @@ void OptionsDialog::SmtGenerateFile()
     QString TempStr;
     int HeadShifter[PlaceHead_list.size()];
 
-    for(int i = 0; i< PlaceHead_list.size(); i++)
+    for(int i = 0; i < PlaceHead_list.size(); i++)
     {
-        HeadShifter[i]= 0;
+        HeadShifter[i] = 0;
     }
 
     for(int i = 0; i < CenterX_list.size(); ++i)
     {
         TempStr = CenterX_list.at(i).toLocal8Bit().constData();
-        if(PrepareStrNumber(TempStr,&Result) == false)
+        if(PrepareStrNumber(TempStr, &Result) == false)
         {
             ui->SmtInfo_textEdit->setText("Wrong number of Xcontent error.");
             return;
         }
         PrepareStr.append(Result);
         TempStr = CenterY_list.at(i).toLocal8Bit().constData();
-        if(PrepareStrNumber(TempStr,&Result) == false)
+        if(PrepareStrNumber(TempStr, &Result) == false)
         {
             ui->SmtInfo_textEdit->setText("Wrong number of Ycontent error.");
             return;
         }
         PrepareStr.append(Result);
-        if(PrepareStrNumber("0.00",&Result) == false)
+        if(PrepareStrNumber("0.00", &Result) == false)
         {
             ui->SmtInfo_textEdit->setText("Wrong number of 0content error.");
             return;
@@ -1202,10 +1202,10 @@ void OptionsDialog::SmtGenerateFile()
         TempStr = Rotation_list.at(i).toLocal8Bit().constData();
         if(TempStr == "360")
         {
-            TempStr ="0";
+            TempStr = "0";
         }
         TempStr.append(".00");
-        if(PrepareStrNumber(TempStr,&Result) == false)
+        if(PrepareStrNumber(TempStr, &Result) == false)
         {
             ui->SmtInfo_textEdit->setText("Wrong number of Rot content error.");
             return;
@@ -1214,7 +1214,7 @@ void OptionsDialog::SmtGenerateFile()
 
         PrepareStr.append("0A0000FFFF0001000");
 
-        for(int j = 0; j < ProfileName_list.size(); ++j )
+        for(int j = 0; j < ProfileName_list.size(); ++j)
         {
             QString profilenametemp = ProfileName_list.at(j).toLocal8Bit().constData();
             QString placeerptemp = PlaceERP_list.at(i).toLocal8Bit().constData();
@@ -1226,7 +1226,7 @@ void OptionsDialog::SmtGenerateFile()
                 HeadShifter[j]++;
                 if(HeadShifter[j] >= headStr.size())
                 {
-                    HeadShifter[j]=0;
+                    HeadShifter[j] = 0;
                 }
                 PrepareStr.append(QString::number(temp));//number of head
 
@@ -1242,41 +1242,38 @@ void OptionsDialog::SmtGenerateFile()
 
         TempStr = "                   \n";
         Result = PlaceDesignator_list.at(i).toLocal8Bit().constData();
-        TempStr.replace(0, Result.size(),Result);
+        TempStr.replace(0, Result.size(), Result);
 
         Result = PlaceERP_list.at(i).toLocal8Bit().constData();
-        TempStr.replace(9, Result.size(),Result);
+        TempStr.replace(9, Result.size(), Result);
 
         PrepareStr.append(TempStr);
     }
 
-
     int point = FileStr.indexOf("&B.OPT");
-    FileStr.insert(point,PrepareStr);
-    ui->SmtInfo_textEdit->setText(FileStr);
+    FileStr.insert(point, PrepareStr);
 
+    ui->SmtInfo_textEdit->setText("File Generate Succesful...");
 
-    /*
-    QStringList fields = line.split("\n");  
+    PlacefilePath = QFileDialog::getSaveFileName(this, tr("Select Generate Yamaha SMT TXT File"), ui->SmtPcbName_lineEdit->text() + ".txt", tr("File (*.txt)"));
 
-    QString str = fields.at(0).toLocal8Bit().constData();
-    
-    QString name = ui->SmtPcbName_lineEdit->text();
-    str.replace(8, name.size(), name );
-
-    ui->SmtInfo_textEdit->setText(str);
-    */
-    return;
-
-        ui->SmtInfo_textEdit->setText("");
-     for(int i = 0; i < PlaceHead_list.size() ; ++i)
-     {
-         Result = PlaceHead_list.at(i).toLocal8Bit().constData();
-         ui->SmtInfo_textEdit->append(Result);// test
-     }
-    //----------------------------------
+    if(!PlacefilePath.isNull())
+    {
+        // Write target file
+        QFile file(PlacefilePath);
+        if(file.open(QIODevice::ReadWrite | QIODevice::Text))
+        {
+            QTextStream stream(&file);
+            stream << FileStr << endl;
+            ui->SmtInfo_textEdit->append("File saved...");
+        }
+        else
+        {
+            ui->SmtInfo_textEdit->setText("Write file error!");
+        }
+        file.close();
+    }
 }
-
 
 bool OptionsDialog::ReplaceStr(QString *filestr, QString target, QString newstr)
 {
@@ -1287,7 +1284,7 @@ bool OptionsDialog::ReplaceStr(QString *filestr, QString target, QString newstr)
         return false;
     }
 
-    filestr->replace(target.size() + point, newstr.size(), newstr );
+    filestr->replace(target.size() + point, newstr.size(), newstr);
 
     return true;
 }
@@ -1300,22 +1297,22 @@ bool OptionsDialog::PrepareStrNumber(QString numberstr, QString *result)
     switch(point)
     {
         case 0:
-        return false;
+            return false;
         case 1:
-        tempStr.replace(4, numberstr.size(), numberstr );
-        break;
+            tempStr.replace(4, numberstr.size(), numberstr);
+            break;
         case 2:
-        tempStr.replace(3, numberstr.size(), numberstr );
-        break;
+            tempStr.replace(3, numberstr.size(), numberstr);
+            break;
         case 3:
-        tempStr.replace(2, numberstr.size(), numberstr );
-        break;
+            tempStr.replace(2, numberstr.size(), numberstr);
+            break;
         case 4:
-        tempStr.replace(1, numberstr.size(), numberstr );
-        break;
+            tempStr.replace(1, numberstr.size(), numberstr);
+            break;
         case 5:
-        tempStr.replace(0, numberstr.size(), numberstr );
-        break;
+            tempStr.replace(0, numberstr.size(), numberstr);
+            break;
     }
     tempStr.resize(8);
     tempStr.append(' ');
