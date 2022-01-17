@@ -1007,6 +1007,11 @@ void OptionsDialog::SmtBrowsePlaceFile()
 
 void OptionsDialog::SmtGenerateFile()
 {
+    if(ui->SmtPcbName_lineEdit->text() == "GTMxxx01")
+    {
+        QMessageBox::critical(this, tr("Error"), tr("A Pcb name must be changed."),QMessageBox::Ok);
+        return;
+    }
     ui->SmtInfo_textEdit->setText("Generatig please wait...");
     qApp->processEvents();
     //---------------------------------
@@ -1090,6 +1095,7 @@ void OptionsDialog::SmtGenerateFile()
         return;
     }
     file.close();
+    int ProfileCount=0;
     //----------------------------------
     foreach(QString PlaceDesignator, PlaceDesignator_list)
     {
@@ -1141,6 +1147,20 @@ void OptionsDialog::SmtGenerateFile()
                             point++;
                         }
                         PlaceHead_list.append(heads);
+                        //Modified profile file index
+                        if(ProfileCount < 10)
+                        {
+                            ProfileFileStr.replace(5, 1, QString::number(ProfileCount));
+                        }
+                        else if(ProfileCount < 100)
+                        {
+                            ProfileFileStr.replace(4, 2, QString::number(ProfileCount));
+                        }
+                        else
+                        {
+                            ProfileFileStr.replace(3, 3, QString::number(ProfileCount));
+                        }
+                        ProfileCount++;
                         //Added Profile file
                         point = FileStr.indexOf("End_of_FD");
                         FileStr.insert(point, ProfileFileStr);
@@ -1230,8 +1250,18 @@ void OptionsDialog::SmtGenerateFile()
                 }
                 PrepareStr.append(QString::number(temp));//number of head
 
-                PrepareStr.append("00FFFF0000000");
-
+                if(j < 10)
+                {
+                    PrepareStr.append("00FFFF0000000");
+                }
+                else if(j < 100)
+                {
+                    PrepareStr.append("00FFFF000000");
+                }
+                else
+                {
+                    PrepareStr.append("00FFFF00000");
+                }
                 PrepareStr.append(QString::number(j));//number of profile
 
                 break;
