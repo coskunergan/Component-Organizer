@@ -661,10 +661,13 @@
          </widget>
          <widget class="QWidget" name="Yamaha">
           <widget class="QPushButton" name="SmtOpenBOMFile_pushButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>8</y>
+             <y>62</y>
              <width>75</width>
              <height>23</height>
             </rect>
@@ -677,7 +680,7 @@
            <property name="geometry">
             <rect>
              <x>80</x>
-             <y>10</y>
+             <y>64</y>
              <width>151</width>
              <height>20</height>
             </rect>
@@ -690,7 +693,7 @@
            <property name="geometry">
             <rect>
              <x>80</x>
-             <y>40</y>
+             <y>14</y>
              <width>151</width>
              <height>20</height>
             </rect>
@@ -703,7 +706,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>40</y>
+             <y>14</y>
              <width>75</width>
              <height>23</height>
             </rect>
@@ -716,9 +719,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>100</y>
+             <y>130</y>
              <width>231</width>
-             <height>281</height>
+             <height>251</height>
             </rect>
            </property>
            <property name="readOnly">
@@ -732,7 +735,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>72</y>
+             <y>101</y>
              <width>75</width>
              <height>23</height>
             </rect>
@@ -745,7 +748,7 @@
            <property name="geometry">
             <rect>
              <x>85</x>
-             <y>74</y>
+             <y>103</y>
              <width>51</width>
              <height>20</height>
             </rect>
@@ -758,7 +761,7 @@
            <property name="geometry">
             <rect>
              <x>140</x>
-             <y>74</y>
+             <y>101</y>
              <width>91</width>
              <height>20</height>
             </rect>
@@ -777,6 +780,22 @@
            </property>
            <property name="readOnly">
             <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="SkipBOM_checkBox">
+           <property name="geometry">
+            <rect>
+             <x>3</x>
+             <y>42</y>
+             <width>71</width>
+             <height>18</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Skip BOM</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </widget>

@@ -193,7 +193,7 @@ void OptionsDialog::setup()
     connect(ui->SmtOpenBOMFile_pushButton, SIGNAL(clicked()), this, SLOT(SmtBrowseBOMFile()));
     connect(ui->SmtOpenPlaceFile_pushButton, SIGNAL(clicked()), this, SLOT(SmtBrowsePlaceFile()));
     connect(ui->SmtGenerateFile_pushButton, SIGNAL(clicked()), this, SLOT(SmtGenerateFile()));
-
+    connect(ui->SkipBOM_checkBox, SIGNAL(clicked()), this, SLOT(UpdateSkipBOM()));
 
     updateInterface();
 }
@@ -750,8 +750,7 @@ void OptionsDialog::ReduceBOM()
         }
     }
     workbook->dynamicCall("Close()");
-    excel->dynamicCall("Quit()");
-
+    excel->dynamicCall("Quit()");        
     ui->PoductAdd_pushButton->setEnabled(true);
     ui->PoductCheck_pushButton->setEnabled(true);
     ui->PoductMax_pushButton->setEnabled(true);
@@ -993,7 +992,7 @@ void OptionsDialog::SmtBrowsePlaceFile()
     {
         ui->SmtInfo_textEdit->setText("No file selected...");
     }
-    if(ui->SmtBOMAdr_lineEdit->text() != "" && ui->SmtPlaceAdr_lineEdit->text() != "")
+    if((ui->SmtBOMAdr_lineEdit->text() != "" && ui->SmtPlaceAdr_lineEdit->text() != "") || (ui->SkipBOM_checkBox->isChecked()))
     {
         ui->SmtGenerateFile_pushButton->setEnabled(true);
         ui->SmtInfo_textEdit->setText("Ready to generate...");
@@ -1006,7 +1005,7 @@ void OptionsDialog::SmtBrowsePlaceFile()
 
 
 void OptionsDialog::SmtGenerateFile()
-{
+{    
     if(ui->SmtPcbName_lineEdit->text() == "GTMxxx01")
     {
         QMessageBox::critical(this, tr("Error"), tr("A Pcb name must be changed."),QMessageBox::Ok);
@@ -1015,39 +1014,43 @@ void OptionsDialog::SmtGenerateFile()
     ui->SmtInfo_textEdit->setText("Generatig please wait...");
     qApp->processEvents();
     //---------------------------------
-    ui->SmtInfo_textEdit->append("BOM File reading.");
-    QAxObject *excel = new QAxObject("Excel.Application", 0);
-    QAxObject *workbooks = excel->querySubObject("Workbooks");
-    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", BOMfilePath);
-    QAxObject *sheets = workbook->querySubObject("Worksheets");
-    QAxObject *sheet = sheets->querySubObject("Item( int )", 1);
-
     QStringList ERP_list;
     QStringList BomDesignetor_list;
-
-    for(int row = 2; row <= 999; row++)
+ 
+    if(!ui->SkipBOM_checkBox->isChecked())
     {
-        QAxObject *cell = sheet->querySubObject("Cells(int,int)", row, 1);
-        ERP_list.append(cell->dynamicCall("Value()").toString());
-        cell = sheet->querySubObject("Cells(int,int)", row, 3);
-        BomDesignetor_list.append(cell->dynamicCall("Value()").toString());
+        ui->SmtInfo_textEdit->append("BOM File reading.");
 
-        if(cell->dynamicCall("Value()").toString() == "")
+        QAxObject *excel = new QAxObject("Excel.Application", 0);
+        QAxObject *workbooks = excel->querySubObject("Workbooks");
+        QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", BOMfilePath);
+        QAxObject *sheets = workbook->querySubObject("Worksheets");
+        QAxObject *sheet = sheets->querySubObject("Item( int )", 1);
+
+        for(int row = 2; row <= 999; row++)
         {
-            break;
+            QAxObject *cell = sheet->querySubObject("Cells(int,int)", row, 1);
+            ERP_list.append(cell->dynamicCall("Value()").toString());
+            cell = sheet->querySubObject("Cells(int,int)", row, 3);
+            BomDesignetor_list.append(cell->dynamicCall("Value()").toString());
+
+            if(cell->dynamicCall("Value()").toString() == "")
+            {
+                break;
+            }
         }
+        workbook->dynamicCall("Close()");
+        excel->dynamicCall("Quit()");
+        ui->SmtInfo_textEdit->append("BOM File read done...");
     }
-    workbook->dynamicCall("Close()");
-    excel->dynamicCall("Quit()");
-    ui->SmtInfo_textEdit->append("BOM File read done...");
     //---------------------------------
     ui->SmtInfo_textEdit->append("Place File reading.");
 
-    excel = new QAxObject("Excel.Application", 0);
-    workbooks = excel->querySubObject("Workbooks");
-    workbook = workbooks->querySubObject("Open(const QString&)", PlacefilePath);
-    sheets = workbook->querySubObject("Worksheets");
-    sheet = sheets->querySubObject("Item( int )", 1);
+    QAxObject *excel = new QAxObject("Excel.Application", 0);
+    QAxObject *workbooks = excel->querySubObject("Workbooks");
+    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", PlacefilePath);
+    QAxObject *sheets = workbook->querySubObject("Worksheets");
+    QAxObject *sheet = sheets->querySubObject("Item( int )", 1);
 
     QStringList CenterX_list;
     QStringList CenterY_list;
@@ -1057,7 +1060,6 @@ void OptionsDialog::SmtGenerateFile()
     QStringList ProfileName_list;
     QStringList ProfileContent_list;
     QStringList PlaceHead_list;
-    //QStringList Footprint_list;
     QString Result;
 
     for(int row = 2; row <= 999; row++)
@@ -1075,11 +1077,17 @@ void OptionsDialog::SmtGenerateFile()
         Rotation_list.append(cell->dynamicCall("Value()").toString());
         cell = sheet->querySubObject("Cells(int,int)", row, 4);
         PlaceDesignator_list.append(cell->dynamicCall("Value()").toString());
-        //cell = sheet->querySubObject("Cells(int,int)", row, 5);
-        //Footprint_list.append(cell->dynamicCall("Value()").toString());
+        if(ui->SkipBOM_checkBox->isChecked())
+        {
+            cell = sheet->querySubObject("Cells(int,int)", row, 5);
+            PlaceERP_list.append(cell->dynamicCall("Value()").toString());
+        }
     }
     workbook->dynamicCall("Close()");
     excel->dynamicCall("Quit()");
+    excel->deleteLater();
+    delete excel;
+    excel = NULL;
     ui->SmtInfo_textEdit->append("Place File read done...");
     //--------------------------------
     // Read Temp file
@@ -1092,90 +1100,183 @@ void OptionsDialog::SmtGenerateFile()
     else
     {
         ui->SmtInfo_textEdit->setText("temp file error");
+        file.close();
         return;
     }
     file.close();
     int ProfileCount=0;
-    //----------------------------------
-    foreach(QString PlaceDesignator, PlaceDesignator_list)
+    //----------------------------------    
+    if(ui->SkipBOM_checkBox->isChecked())
     {
-        for(int i = 0; i < BomDesignetor_list.size(); ++i)
+        for(int i = 0; i < PlaceDesignator_list.size(); ++i)
         {
-            Result = BomDesignetor_list.at(i).toLocal8Bit().constData();
-            if(Result.contains(PlaceDesignator))
+            Result = PlaceERP_list.at(i).toLocal8Bit().constData();
+            if(Result == "")
             {
-                Result = ERP_list.at(i).toLocal8Bit().constData();
-                if(Result == "")
+                ui->SmtInfo_textEdit->append("ERROR Missing ERP Number;");
+                Result = PlaceDesignator_list.at(i).toLocal8Bit().constData();
+                ui->SmtInfo_textEdit->append(Result);
+                return;
+            }
+            bool skip  = false;
+            foreach(QString str, ProfileName_list)
+            {
+                if(str == Result)
                 {
-                    ui->SmtInfo_textEdit->append("ERROR Missing ERP Number;");
-                    ui->SmtInfo_textEdit->append(PlaceDesignator);
-                    return;
+                    skip = true;
+                    break;
                 }
-                PlaceERP_list.append(Result);
-                bool skip = false;
-                foreach(QString str, ProfileName_list)
+            }
+            if(skip == false)
+            {
+                ProfileName_list.append(Result);
+                QFile Pfile(m_co->dirPath() + CO_SMT_PROFILE_PATH + '/' + Result + ".txt");
+                QString ProfileFileStr;
+                if(Pfile.open(QIODevice::ReadOnly | QIODevice::Text))
                 {
-                    if(str == Result)
+                    ProfileFileStr.append(Pfile.readAll());
+                    Pfile.close();
+                    ProfileContent_list.append(ProfileFileStr);
+                    int point = ProfileFileStr.indexOf("HEAD");
+                    if(point == -1)
                     {
-                        skip = true;
-                        break;
+                        ui->SmtInfo_textEdit->setText(Result + ".txt file missing head info!");
+                        return;
                     }
-                }
-                if(skip == false)
-                {
-                    ProfileName_list.append(Result);
-                    QFile Pfile(m_co->dirPath() + CO_SMT_PROFILE_PATH + '/' + Result + ".txt");
-                    QString ProfileFileStr;
-                    if(Pfile.open(QIODevice::ReadOnly | QIODevice::Text))
+                    QString heads;
+                    while(ProfileFileStr.at(point) != ' ')
                     {
-                        ProfileFileStr.append(Pfile.readAll());
-                        Pfile.close();
-                        ProfileContent_list.append(ProfileFileStr);
-                        int point = ProfileFileStr.indexOf("HEAD");
-                        if(point == -1)
+                        if(ProfileFileStr.at(point) >= '1' && ProfileFileStr.at(point) <= '8')
                         {
-                            ui->SmtInfo_textEdit->setText(Result + ".txt file missing head info!");
-                            return;
+                            heads.append(ProfileFileStr.at(point));
                         }
-                        QString heads;
-                        while(ProfileFileStr.at(point) != ' ')
-                        {
-                            if(ProfileFileStr.at(point) >= '1' && ProfileFileStr.at(point) <= '8')
-                            {
-                                heads.append(ProfileFileStr.at(point));
-                            }
-                            point++;
-                        }
-                        PlaceHead_list.append(heads);
-                        //Modified profile file index
-                        if(ProfileCount < 10)
-                        {
-                            ProfileFileStr.replace(5, 1, QString::number(ProfileCount));
-                        }
-                        else if(ProfileCount < 100)
-                        {
-                            ProfileFileStr.replace(4, 2, QString::number(ProfileCount));
-                        }
-                        else
-                        {
-                            ProfileFileStr.replace(3, 3, QString::number(ProfileCount));
-                        }
-                        ProfileCount++;
-                        //Added Profile file
-                        point = FileStr.indexOf("End_of_FD");
-                        FileStr.insert(point, ProfileFileStr);
+                        point++;
+                    }
+                    PlaceHead_list.append(heads);
+                    //Modified profile file index
+                    if(ProfileCount < 10)
+                    {
+                        ProfileFileStr.replace(5, 1, QString::number(ProfileCount));
+                    }
+                    else if(ProfileCount < 100)
+                    {
+                        ProfileFileStr.replace(4, 2, QString::number(ProfileCount));
                     }
                     else
                     {
-                        ui->SmtInfo_textEdit->setText(Result + ".txt file read error!");
-                        Pfile.close();
-                        return;
+                        ProfileFileStr.replace(3, 3, QString::number(ProfileCount));
+                    }
+                    ProfileCount++;
+                    //Added Profile file
+                    point = FileStr.indexOf("End_of_FD");
+                    FileStr.insert(point, ProfileFileStr);
+                }
+                else
+                {
+                    ui->SmtInfo_textEdit->setText(Result + ".txt file read error!");
+                    Pfile.close();
+                    return;
+                }
+            }
+        }
+    }
+    else
+    {
+        foreach(QString PlaceDesignator, PlaceDesignator_list)
+        {
+            for(int i = 0; i < BomDesignetor_list.size(); ++i)
+            {
+                Result = BomDesignetor_list.at(i).toLocal8Bit().constData();
+                QStringList ResultList = Result.split(',');
+                bool match = false;
+                foreach(QString str, ResultList)
+                {
+                    str.replace(" ","");
+                    if(PlaceDesignator == str)
+                    {
+                        match = true;
                     }
                 }
-                //Result.append("=");// test
-                //Result.append(PlaceDesignator);// test
-                //ui->SmtInfo_textEdit->append(Result);// test
-                break;
+                if(match == true)
+                {
+                    Result = ERP_list.at(i).toLocal8Bit().constData();
+                    if(Result == "")
+                    {
+                        ui->SmtInfo_textEdit->append("ERROR Missing ERP Number;");
+                        ui->SmtInfo_textEdit->append(PlaceDesignator);
+                        return;
+                    } 
+                    PlaceERP_list.append(Result);
+                    bool skip = false;
+                    foreach(QString str, ProfileName_list)
+                    {
+                        if(str == Result)
+                        {
+                            skip = true;
+                            break;
+                        }
+                    }
+                    if(skip == false)
+                    {
+                        ProfileName_list.append(Result);
+                        QFile Pfile(m_co->dirPath() + CO_SMT_PROFILE_PATH + '/' + Result + ".txt");
+                        QString ProfileFileStr;
+                        if(Pfile.open(QIODevice::ReadOnly | QIODevice::Text))
+                        {
+                            ProfileFileStr.append(Pfile.readAll());
+                            Pfile.close();
+                            ProfileContent_list.append(ProfileFileStr);
+                            int point = ProfileFileStr.indexOf("HEAD");
+                            if(point == -1)
+                            {
+                                ui->SmtInfo_textEdit->setText(Result + ".txt file missing head info!");
+                                return;
+                            }
+                            QString heads;
+                            while(ProfileFileStr.at(point) != ' ')
+                            {
+                                if(ProfileFileStr.at(point) >= '1' && ProfileFileStr.at(point) <= '8')
+                                {
+                                    heads.append(ProfileFileStr.at(point));
+                                }
+                                point++;
+                            }
+                            PlaceHead_list.append(heads);
+                            //Modified profile file index
+                            if(ProfileCount < 10)
+                            {
+                                ProfileFileStr.replace(5, 1, QString::number(ProfileCount));
+                            }
+                            else if(ProfileCount < 100)
+                            {
+                                ProfileFileStr.replace(4, 2, QString::number(ProfileCount));
+                            }
+                            else
+                            {
+                                ProfileFileStr.replace(3, 3, QString::number(ProfileCount));
+                            }
+                            ProfileCount++;
+                            //Added Profile file
+                            point = FileStr.indexOf("End_of_FD");
+                            FileStr.insert(point, ProfileFileStr);
+                        }
+                        else
+                        {
+                            ui->SmtInfo_textEdit->setText(Result + ".txt file read error!");
+                            Pfile.close();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        ui->SmtInfo_textEdit->setText(Result + "Does not match Designator BOM to PLACE File!");
+                        //return;
+                    }
+                    //Result.append("=");// test
+                    //Result.append(PlaceDesignator);// test
+                    //ui->SmtInfo_textEdit->append(Result);// test
+                    break;
+                }
             }
         }
     }
@@ -1302,6 +1403,39 @@ void OptionsDialog::SmtGenerateFile()
             ui->SmtInfo_textEdit->setText("Write file error!");
         }
         file.close();
+    }
+    this->close();
+}
+
+void OptionsDialog::UpdateSkipBOM()
+{
+    if(!ui->SkipBOM_checkBox->isChecked())
+    {
+        ui->SmtOpenBOMFile_pushButton->setEnabled(true);
+        if(ui->SmtBOMAdr_lineEdit->text() != "" && ui->SmtPlaceAdr_lineEdit->text() != "")
+        {
+            ui->SmtGenerateFile_pushButton->setEnabled(true);
+            ui->SmtInfo_textEdit->setText("Ready to generate...");
+        }
+        else
+        {
+            ui->SmtGenerateFile_pushButton->setEnabled(false);
+            ui->SmtInfo_textEdit->setText("Please select file!");
+        }
+    }
+    else
+    {
+        ui->SmtOpenBOMFile_pushButton->setEnabled(false);
+        if(ui->SmtPlaceAdr_lineEdit->text() == "")
+        {
+            ui->SmtGenerateFile_pushButton->setEnabled(false);
+            ui->SmtInfo_textEdit->append("Please select the Place file...");
+        }
+        else
+        {
+            ui->SmtGenerateFile_pushButton->setEnabled(true);
+            ui->SmtInfo_textEdit->setText("Ready to generate...");
+        }
     }
 }
 
