@@ -750,7 +750,7 @@ void OptionsDialog::ReduceBOM()
         }
     }
     workbook->dynamicCall("Close()");
-    excel->dynamicCall("Quit()");        
+    excel->dynamicCall("Quit()");
     ui->PoductAdd_pushButton->setEnabled(true);
     ui->PoductCheck_pushButton->setEnabled(true);
     ui->PoductMax_pushButton->setEnabled(true);
@@ -1005,10 +1005,10 @@ void OptionsDialog::SmtBrowsePlaceFile()
 
 
 void OptionsDialog::SmtGenerateFile()
-{    
+{
     if(ui->SmtPcbName_lineEdit->text() == "GTMxxx01")
     {
-        QMessageBox::critical(this, tr("Error"), tr("A Pcb name must be changed."),QMessageBox::Ok);
+        QMessageBox::critical(this, tr("Error"), tr("A Pcb name must be changed."), QMessageBox::Ok);
         return;
     }
     ui->SmtInfo_textEdit->setText("Generatig please wait...");
@@ -1016,7 +1016,7 @@ void OptionsDialog::SmtGenerateFile()
     //---------------------------------
     QStringList ERP_list;
     QStringList BomDesignetor_list;
- 
+
     if(!ui->SkipBOM_checkBox->isChecked())
     {
         ui->SmtInfo_textEdit->append("BOM File reading.");
@@ -1104,8 +1104,8 @@ void OptionsDialog::SmtGenerateFile()
         return;
     }
     file.close();
-    int ProfileCount=0;
-    //----------------------------------    
+    int ProfileCount = 0;
+    //----------------------------------
     if(ui->SkipBOM_checkBox->isChecked())
     {
         for(int i = 0; i < PlaceDesignator_list.size(); ++i)
@@ -1191,7 +1191,7 @@ void OptionsDialog::SmtGenerateFile()
                 bool match = false;
                 foreach(QString str, ResultList)
                 {
-                    str.replace(" ","");
+                    str.replace(" ", "");
                     if(PlaceDesignator == str)
                     {
                         match = true;
@@ -1205,7 +1205,7 @@ void OptionsDialog::SmtGenerateFile()
                         ui->SmtInfo_textEdit->append("ERROR Missing ERP Number;");
                         ui->SmtInfo_textEdit->append(PlaceDesignator);
                         return;
-                    } 
+                    }
                     PlaceERP_list.append(Result);
                     bool skip = false;
                     foreach(QString str, ProfileName_list)
