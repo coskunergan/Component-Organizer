@@ -22,4 +22,5 @@
         <file>img/package.png</file>
         <file>img/config.png</file>
     </qresource>
+    <qresource prefix="/new/prefix1"/>
 </RCC>
