@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>431</width>
-    <height>232</height>
+    <width>433</width>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
       </font>
      </property>
      <property name="title">
-      <string>Info</string>
+      <string>Bilgi</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -43,7 +43,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Description</string>
+           <string>Açıklama</string>
           </property>
          </widget>
         </item>
@@ -72,7 +72,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Name</string>
+           <string>İsim</string>
           </property>
          </widget>
         </item>
@@ -129,7 +129,7 @@
       </font>
      </property>
      <property name="title">
-      <string>Files</string>
+      <string>Dosya</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -143,7 +143,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Browse PDF...</string>
+           <string>Dosya seç</string>
           </property>
          </widget>
         </item>
@@ -172,7 +172,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Attach...</string>
+           <string>Ek Dosya...</string>
           </property>
          </widget>
         </item>
@@ -193,21 +193,6 @@
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="font">
-         <font>
-          <pointsize>7</pointsize>
-          <weight>50</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Hint: If you need to attach multiple files, compress them first (zip, rar, tar...)</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>

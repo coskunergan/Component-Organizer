@@ -25,13 +25,13 @@ QString Datasheet::typeToString(Type type)
     switch(type)
     {
         case Datasheet::Normal:
-            return QString(tr("Datasheet"));
+            return QString(tr("Resmi Evrak"));
         case Datasheet::Summary:
-            return QString(tr("Summary"));
+            return QString(tr("Katalog"));
         case Datasheet::Errata:
-            return QString(tr("Errata"));
+            return QString(tr("Klavuz"));
         case Datasheet::UsersGuide:
-            return QString(tr("User's Guide"));
+            return QString(tr("Üretici Notu"));
         default:
             return QString();
     }
@@ -39,19 +39,19 @@ QString Datasheet::typeToString(Type type)
 
 Datasheet::Type Datasheet::typeFromString(QString str)
 {
-    if(str.compare(tr("Datasheet")) == 0)
+    if(str.compare(tr("Resmi Evrak")) == 0)
     {
         return Datasheet::Normal;
     }
-    else if(str.compare(tr("Summary")) == 0)
+    else if(str.compare(tr("Katalog")) == 0)
     {
         return Datasheet::Summary;
     }
-    else if(str.compare(tr("Errata")) == 0)
+    else if(str.compare(tr("Klavuz")) == 0)
     {
         return Datasheet::Errata;
     }
-    else if(str.compare(tr("User's Guide")) == 0)
+    else if(str.compare(tr("Üretici Notu")) == 0)
     {
         return Datasheet::UsersGuide;
     }

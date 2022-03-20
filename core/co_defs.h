@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QString;
 
-const QString CO_VERSION = "0.96";
+const QString CO_VERSION = "1.0";
 
 const QString CO_DATA_PATH      = "/../data";
 const QString CO_DATASHEET_PATH = CO_DATA_PATH + "/datasheet";

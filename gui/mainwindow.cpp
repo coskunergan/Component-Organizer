@@ -409,7 +409,7 @@ void MainWindow::about()
 {
     QString text;
 
-    text.append("Component Organizer " + CO_VERSION + "\n");
+    text.append("Optik Stok Takip " + CO_VERSION + "\n");
     text.append("\nBuilt with Qt " + QString(QT_VERSION_STR) + " ");
     text.append("(" + QDateTime::currentDateTime().toString("dd/MM/yyyy") + ")");
     text.append("\n");
@@ -453,7 +453,7 @@ void MainWindow::exportFile()
 {
     QString filepath = QFileDialog::getSaveFileName(this,
                        tr("Export Excel File"),
-                       "Stock_" + QDateTime::currentDateTime().toString("dd_MM_yyyy"),
+                       "Stok_" + QDateTime::currentDateTime().toString("dd_MM_yyyy"),
                        tr("Microsoft Office 2007 (*.xlsx)"));
 
     if(!filepath.isEmpty())
@@ -475,11 +475,11 @@ void MainWindow::exportFile()
         cellD = worksheet->querySubObject("Range(QVariant, QVariant)", "D1");
         cellE = worksheet->querySubObject("Range(QVariant, QVariant)", "E1");
 
-        cellA->dynamicCall("SetValue(const QVariant&)", QString("Code")); //Set the value of the cell
-        cellB->dynamicCall("SetValue(const QVariant&)", QString("Description"));
-        cellC->dynamicCall("SetValue(const QVariant&)", QString("Stock"));
-        cellD->dynamicCall("SetValue(const QVariant&)", QString("Low Stock"));
-        cellE->dynamicCall("SetValue(const QVariant&)", QString("Container"));
+        cellA->dynamicCall("SetValue(const QVariant&)", QString("Kodu")); //Set the value of the cell
+        cellB->dynamicCall("SetValue(const QVariant&)", QString("Bilgi"));
+        cellC->dynamicCall("SetValue(const QVariant&)", QString("Stok"));
+        cellD->dynamicCall("SetValue(const QVariant&)", QString("Min Stok"));
+        cellE->dynamicCall("SetValue(const QVariant&)", QString("Konum"));
 
         int i = 1;
         int totalStock;
@@ -526,7 +526,7 @@ void MainWindow::exportFile()
         excel->dynamicCall("Quit()");//Close excel
         delete excel;
         excel = NULL;
-        QMessageBox::about(this, "Export", "Export Done..");
+        QMessageBox::about(this, "islem", "Tamamlandi..");
     }
 }
 

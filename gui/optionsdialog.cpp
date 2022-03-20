@@ -68,7 +68,7 @@ OptionsDialog::~OptionsDialog()
 
 void OptionsDialog::setup()
 {
-    setWindowTitle(tr("Settings"));
+    setWindowTitle(tr("Ayarlar"));
     setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 
     MainWindow *w = (MainWindow *) parentWidget();
@@ -76,33 +76,33 @@ void OptionsDialog::setup()
     ui->markLowStock_checkBox->setChecked(w->settings().markLowStock);
     ui->showContainers_checkBox->setChecked(w->settings().showContainers);
 
-    QListWidgetItem *general = new QListWidgetItem(tr("General"));
+    QListWidgetItem *general = new QListWidgetItem(tr("Ayarlar"));
     general->setIcon(QIcon(":/img/config.png"));
     ui->options_listWidget->addItem(general);
 
-    QListWidgetItem *containers = new QListWidgetItem(tr("Containers"));
+    QListWidgetItem *containers = new QListWidgetItem(tr("Konumlar"));
     containers->setIcon(QIcon(":/img/container.png"));
     ui->options_listWidget->addItem(containers);
 
-    QListWidgetItem *packages = new QListWidgetItem(tr("Packages"));
+    QListWidgetItem *packages = new QListWidgetItem(tr("Tanimlar"));
     packages->setIcon(QIcon(":/img/package.png"));
     ui->options_listWidget->addItem(packages);
 
-    QListWidgetItem *labels = new QListWidgetItem(tr("Labels"));
+    QListWidgetItem *labels = new QListWidgetItem(tr("Modeller"));
     labels->setIcon(QIcon(":/img/label.png"));
     ui->options_listWidget->addItem(labels);
 
-    QListWidgetItem *manufacturers = new QListWidgetItem(tr("Manufacturers"));
-    manufacturers->setIcon(QIcon(":/img/manufacturer.png"));
-    ui->options_listWidget->addItem(manufacturers);
+    //QListWidgetItem *manufacturers = new QListWidgetItem(tr("Manufacturers"));
+    //manufacturers->setIcon(QIcon(":/img/manufacturer.png"));
+    //ui->options_listWidget->addItem(manufacturers);
 
-    QListWidgetItem *product = new QListWidgetItem(tr("Product"));
-    product->setIcon(QIcon(":/img/chip.png"));
-    ui->options_listWidget->addItem(product);
+    //QListWidgetItem *product = new QListWidgetItem(tr("Product"));
+    //product->setIcon(QIcon(":/img/chip.png"));
+    //ui->options_listWidget->addItem(product);
 
-    QListWidgetItem *yamaha = new QListWidgetItem(tr("Yamaha SMT"));
-    yamaha->setIcon(QIcon(":/img/chip_64x64.png"));
-    ui->options_listWidget->addItem(yamaha);
+    //QListWidgetItem *yamaha = new QListWidgetItem(tr("Yamaha SMT"));
+    //yamaha->setIcon(QIcon(":/img/chip_64x64.png"));
+    //ui->options_listWidget->addItem(yamaha);
 
     m_containerTable = new pMiniTableWidget(this);
     m_containerTable->setMaximumWidth(ColumnMaxWidth);
@@ -240,8 +240,8 @@ void OptionsDialog::addContainerHandler()
     if(m_containerTable->hasText(name, 0) >= 0)
     {
         QMessageBox::information(this,
-                                 tr("Info"),
-                                 tr("Container \"") + name + tr("\" already exists."));
+                                 tr("Bilgi"),
+                                 tr("Konum \"") + name + tr("\" zaten mevcut."));
         return;
     }
 
@@ -262,9 +262,9 @@ void OptionsDialog::removeContainerHandler()
         if(c->container() != 0 && c->container()->name() == name)
             usingIt.append(c);
 
-    if(message(tr("Are you sure you want to remove container \"")
+    if(message(tr("Konum bilgisini silmek istediginizden emin misiniz: \"")
                + name + tr("\"?") + "\n" +
-               tr("There are ") + QString::number(usingIt.count()) + tr(" component(s) using it.")))
+               tr("Bu konumu ") + QString::number(usingIt.count()) + tr(" adet giris kullaniyor.")))
     {
         qDebug() << "remove container" <<  name;
         int row = m_containerTable->currentRow();
@@ -284,8 +284,8 @@ void OptionsDialog::addPackageHandler()
     if(m_packageTable->hasText(name, 0) >= 0)
     {
         QMessageBox::information(this,
-                                 tr("Info"),
-                                 tr("Package \"") + name + tr("\" already exists."));
+                                 tr("Bilgi"),
+                                 tr("Gurup \"") + name + tr("\" zaten mevcut."));
         return;
     }
 
@@ -306,9 +306,9 @@ void OptionsDialog::removePackageHandler()
         if(c->stock(name) != 0)
             usingIt.append(c);
 
-    if(message(tr("Are you sure you want to remove package \"")
+    if(message(tr("Bu gurubu silmek istediginizden emin misiniz \"")
                + name + tr("\"?") + "\n" +
-               tr("There are ") + QString::number(usingIt.count()) + tr(" component(s) using it.")))
+               tr("Bu gurubu ") + QString::number(usingIt.count()) + tr(" adet giris kullaniyor.")))
     {
         qDebug() << "remove package" <<  name;
         int row = m_packageTable->currentRow();
@@ -328,9 +328,9 @@ void OptionsDialog::addPrimaryLabelHandler()
     if(m_co->findLabel(name) != 0)
     {
         QMessageBox::information(this,
-                                 tr("Info"),
-                                 tr("Label \"") + name + tr("\" already exists.") + "\n" +
-                                 tr("The label's name must be unique."));
+                                 tr("Bilgi"),
+                                 tr("Model \"") + name + tr("\" zaten mevcut.") + "\n" +
+                                 tr("Model bilgisi essiz olmali."));
         return;
     }
 
@@ -351,9 +351,9 @@ void OptionsDialog::removePrimaryLabelHandler()
         if(c->primaryLabel() != 0 && c->primaryLabel()->name() == name)
             usingIt.append(c);
 
-    if(message(tr("Are you sure you want to remove primary label \"")
+    if(message(tr("Bu modeli silmek istediginizden emin misiniz \"")
                + name + tr("\"?") + "\n" +
-               tr("There are ") + QString::number(usingIt.count()) + tr(" component(s) using it.")))
+               tr("Bu model ") + QString::number(usingIt.count()) + tr(" adet giris tarafindan kullaniyor.")))
     {
         int row = m_primaryLabelTable->currentRow();
         m_primaryLabelTable->removeRow(row);
@@ -383,9 +383,8 @@ void OptionsDialog::addSecondaryLabelHandler()
     if(m_co->findSecondaryLabel(topLabel, name) != 0)
     {
         QMessageBox::information(this,
-                                 tr("Info"),
-                                 tr("Label \"") + name + tr("\" already exists.") + "\n" +
-                                 tr("The label's name must be unique."));
+                                 tr("Bilgi"),
+                                 tr("Model bilgisi essiz olmali."));
         return;
     }
 
@@ -406,9 +405,9 @@ void OptionsDialog::removeSecondaryLabelHandler()
         if(c->secondaryLabel() != 0 && c->secondaryLabel()->name() == name)
             usingIt.append(c);
 
-    if(message(tr("Are you sure you want to remove secondary label \"")
+    if(message(tr("Bu alt kodu silmek istediginizden emin misiniz \"")
                + name + tr("\"?") + "\n" +
-               tr("There are ") + QString::number(usingIt.count()) + tr(" component(s) using it.")))
+               tr("Bu kodu ") + QString::number(usingIt.count()) + tr(" adet giris kullaniyor.")))
     {
         int row = m_secondaryLabelTable->currentRow();
         m_secondaryLabelTable->removeRow(row);
@@ -429,8 +428,8 @@ void OptionsDialog::addManufacturerHandler()
     if(m_manufacturerTable->hasText(name, 0, Qt::CaseInsensitive) >= 0)
     {
         QMessageBox::information(this,
-                                 tr("Info"),
-                                 tr("Manufacturer \"") + name + tr("\" already exists."));
+                                 tr("Bilgi"),
+                                 tr("Tanim \"") + name + tr("\" zaten mevcut."));
         return;
     }
 
@@ -450,7 +449,7 @@ void OptionsDialog::removeManufacturerHandler()
 {
     QString name = m_manufacturerTable->currentItem()->text();
 
-    if(message(tr("Are you sure you want to remove manufacturer \"")
+    if(message(tr("Bu tanimi silmek istediginizden emin misiniz \"")
                + name + tr("\"?")))
     {
         qDebug() << "remove manufacturer" <<  name;

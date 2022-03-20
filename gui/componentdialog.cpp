@@ -137,10 +137,10 @@ void ComponentDialog::setup()
     switch(m_mode)
     {
         case ComponentDialog::Add:
-            setWindowTitle(tr("Add Component"));
+            setWindowTitle(tr("Yeni Ürün Girisi"));
             break;
         case ComponentDialog::Edit:
-            setWindowTitle(tr("Edit Component"));
+            setWindowTitle(tr("Girisi Düzenle"));
             break;
     }
 
@@ -226,7 +226,7 @@ void ComponentDialog::accept()
 
     if(name.isEmpty())
     {
-        QMessageBox::critical(this, tr("Error"), tr("Invalid name"),
+        QMessageBox::critical(this, tr("Hata"), tr("Geçersiz isim!"),
                               QMessageBox::Ok, QMessageBox::NoButton);
         return;
     }
@@ -236,10 +236,10 @@ void ComponentDialog::accept()
         case ComponentDialog::Add:
             if(m_co->componentNames().contains(name, Qt::CaseInsensitive))
             {
-                QMessageBox::critical(this, tr("Error"),
-                                      tr("A component with name \"") + name +
-                                      tr("\" already exists.") + "\n" +
-                                      tr("The component's name must be unique."),
+                QMessageBox::critical(this, tr("Hata"),
+                                      tr("Ürün numarasi: \"") + name +
+                                      tr("\" zaten mevcut.") + "\n" +
+                                      tr("Bu numara essiz olmalidir."),
                                       QMessageBox::Ok);
                 return;
             }
@@ -250,10 +250,10 @@ void ComponentDialog::accept()
             if(m_component->name() != name &&
                     m_co->componentNames().contains(name, Qt::CaseInsensitive))
             {
-                QMessageBox::critical(this, tr("Error"),
-                                      tr("A component with name ") + name +
-                                      tr(" already exists.") + "\n" +
-                                      tr("The component's name must be unique."),
+                QMessageBox::critical(this, tr("Hata"),
+                                      tr("Ürün numarasi: \"") + name +
+                                      tr("\" zaten mevcut.") + "\n" +
+                                      tr("Bu numara essiz olmali."),
                                       QMessageBox::Ok);
                 return;
             }
@@ -517,9 +517,9 @@ void ComponentDialog::updateLabels()
 void ComponentDialog::browseFile()
 {
     QString filePath = QFileDialog::getOpenFileName(this,
-                       tr("Select Datasheet"),
+                       tr("Dosya seç"),
                        "",
-                       tr("Datasheet (*.pdf)"));
+                       tr("Dosya (*.pdf)"));
 
     if(!filePath.isNull())
         ui->filePath_lineEdit->setText(filePath);
@@ -559,8 +559,8 @@ void ComponentDialog::addDatasheetHandler() // TODO use addItem() instead of add
     else
     {
         QMessageBox::information(this,
-                                 tr("Info"),
-                                 tr("Datasheet with same type and manufacturer already exists"),
+                                 tr("Bilgi"),
+                                 tr("Ayni türde üreticiye sahip veri dosyasi zaten mevcut."),
                                  QMessageBox::Ok
                                 );
     }

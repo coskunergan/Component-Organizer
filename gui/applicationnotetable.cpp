@@ -35,10 +35,10 @@ ApplicationNoteTable::ApplicationNoteTable(CO *co, QWidget *parent) :
     setDefaultSortedColumn(DescriptionColumn);
 
     QStringList headerLabels;
-    headerLabels.append(tr("Description"));
-    headerLabels.append(tr("Name"));
+    headerLabels.append(tr("Açiklama"));
+    headerLabels.append(tr("Isim"));
     headerLabels.append(tr("PDF"));
-    headerLabels.append(tr("Annex"));
+    headerLabels.append(tr("Ekler"));
 
     setHorizontalHeaderLabels(headerLabels);
 
@@ -53,10 +53,10 @@ ApplicationNoteTable::ApplicationNoteTable(CO *co, QWidget *parent) :
 
     m_contextMenu = new QMenu(this);
 
-    m_actionEdit = m_contextMenu->addAction(tr("&Edit"));
-    m_actionRemove = m_contextMenu->addAction(tr("&Remove"));
+    m_actionEdit = m_contextMenu->addAction(tr("&Düzenle"));
+    m_actionRemove = m_contextMenu->addAction(tr("&Sil"));
     m_contextMenu->addSeparator();
-    m_actionNew = m_contextMenu->addAction(tr("&New..."));
+    m_actionNew = m_contextMenu->addAction(tr("&Yeni..."));
 
     connect(m_actionEdit, SIGNAL(triggered()), this, SLOT(editHandler()));
     connect(m_actionRemove, SIGNAL(triggered()), this, SLOT(removeHandler()));
@@ -77,9 +77,9 @@ void ApplicationNoteTable::fillRow(int row, ApplicationNote *appnote)
 
     QTableWidgetItem *pdf;
     if(!appnote->pdfPath().isEmpty())
-        pdf = new QTableWidgetItem(tr("view"));
+        pdf = new QTableWidgetItem(tr("göster"));
     else
-        pdf = new QTableWidgetItem(tr("n/a"));
+        pdf = new QTableWidgetItem(tr("yok"));
     pdf->setTextAlignment(Qt::AlignCenter);
 
     pToolButton *pdfButton = new pToolButton(this);
@@ -89,9 +89,9 @@ void ApplicationNoteTable::fillRow(int row, ApplicationNote *appnote)
 
     QTableWidgetItem *attachedFile;
     if(!appnote->attachedFilePath().isEmpty())
-        attachedFile = new QTableWidgetItem(tr("open"));
+        attachedFile = new QTableWidgetItem(tr("göster"));
     else
-        attachedFile = new QTableWidgetItem(tr("n/a"));
+        attachedFile = new QTableWidgetItem(tr("yok"));
     attachedFile->setTextAlignment(Qt::AlignCenter);
 
     pToolButton *attachedFileButton = new pToolButton(this);
@@ -166,9 +166,9 @@ void ApplicationNoteTable::removeHandler()
     {
         ApplicationNote *a = applicationNote(currentRow());
 
-        int res = QMessageBox::question(this, tr("Confirm"),
-                                        tr("Are you sure you want to remove \"") + a->description() + "\"?\n" +
-                                        tr("The PDF and attached files will be deleted."),
+        int res = QMessageBox::question(this, tr("Dogrulama"),
+                                        tr("Bu dosyayi silmekte emin misiniz: \"") + a->description() + "\"?\n" +
+                                        tr("Ek dosyalar birlikte silinecektir."),
                                         QMessageBox::Yes, QMessageBox::No);
         if(res == QMessageBox::Yes)
         {

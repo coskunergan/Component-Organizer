@@ -33,9 +33,9 @@ StockTable::StockTable(QWidget *parent) :
     setColumnCount(3);
 
     QStringList headerLabels;
-    headerLabels.append(tr("Package"));
-    headerLabels.append(tr("Stock"));
-    headerLabels.append(tr("Low"));
+    headerLabels.append(tr("Gurup"));
+    headerLabels.append(tr("Stok"));
+    headerLabels.append(tr("Min"));
 
     setHorizontalHeaderLabels(headerLabels);
 

@@ -45,7 +45,7 @@ ComponentDetails::ComponentDetails(CO *co, Component *component, QWidget *parent
     m_datasheetTable->setMaximumHeight(100);
     m_stockTable->setMaximumSize(240, 105);
 
-    setWindowTitle("Details of " + component->name());
+    setWindowTitle("Detay " + component->name());
 
     setup();
 }

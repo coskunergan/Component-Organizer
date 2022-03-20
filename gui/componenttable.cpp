@@ -48,11 +48,11 @@ ComponentTable::ComponentTable(CO *co, QWidget *parent) :
 
     QStringList headerLabels;
     headerLabels.append(tr("ID"));
-    headerLabels.append(tr("Code"));
-    headerLabels.append(tr("Description"));
-    headerLabels.append(tr("Datasheet"));
-    headerLabels.append(tr("Stock"));
-    headerLabels.append(tr("Container"));
+    headerLabels.append(tr("Kodu"));
+    headerLabels.append(tr("Bilgi"));
+    headerLabels.append(tr("Dosya"));
+    headerLabels.append(tr("Stok"));
+    headerLabels.append(tr("Konum"));
 
     setHorizontalHeaderLabels(headerLabels);
 
@@ -74,11 +74,11 @@ ComponentTable::ComponentTable(CO *co, QWidget *parent) :
 
     m_contextMenu = new QMenu(this);
 
-    m_actionShowDetails = m_contextMenu->addAction(tr("Show &Details..."));
-    m_actionEdit = m_contextMenu->addAction(tr("&Edit"));
-    m_actionRemove = m_contextMenu->addAction(tr("&Remove"));
+    m_actionShowDetails = m_contextMenu->addAction(tr("Detay Göster"));
+    m_actionEdit = m_contextMenu->addAction(tr("&Düzenle"));
+    m_actionRemove = m_contextMenu->addAction(tr("&Sil"));
     m_contextMenu->addSeparator();
-    m_actionNew = m_contextMenu->addAction(tr("&New..."));
+    m_actionNew = m_contextMenu->addAction(tr("&Yeni..."));
 
     connect(m_actionShowDetails, SIGNAL(triggered()), this, SLOT(showDetailsHandler()));
     connect(m_actionEdit, SIGNAL(triggered()), this, SLOT(editHandler()));
@@ -149,9 +149,9 @@ void ComponentTable::fillRow(int row, Component *component)
         link = component;
 
     if(link->defaultDatasheet() == 0)
-        viewButton->setText("n/a");
+        viewButton->setText("yok");
     else
-        viewButton->setText("view");
+        viewButton->setText("göster");
 
     viewButton->setNumber(row);
     connect(viewButton, SIGNAL(pressed()), this, SLOT(updateSelectedRowFromToolButton()));
@@ -252,9 +252,9 @@ void ComponentTable::removeHandler()
     {
         qDebug() << "removeHandler()" << m_selected->name();
 
-        int res = QMessageBox::question(this, tr("Confirm"),
-                                        tr("Are you sure you want to remove \"") + m_selected->name() + "\"?\n" +
-                                        tr("All datasheets will be deleted."),
+        int res = QMessageBox::question(this, tr("Dikkat"),
+                                        tr("Bu girisi silmek istediginizden emin misiniz: \"") + m_selected->name() + "\"?\n" +
+                                        tr("ilgili dosyalar beraberinde silinecektir."),
                                         QMessageBox::Yes, QMessageBox::No);
         if(res == QMessageBox::Yes)
         {

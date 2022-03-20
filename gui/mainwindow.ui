@@ -17,11 +17,11 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Component Organizer</string>
+   <string>Optik Stok Takip</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../resources/img.qrc">
-    <normaloff>:/img/chip_64x64.png</normaloff>:/img/chip_64x64.png</iconset>
+    <normaloff>:/img/label.png</normaloff>:/img/label.png</iconset>
   </property>
   <property name="animated">
    <bool>true</bool>
@@ -150,7 +150,7 @@
         <item>
          <widget class="QPushButton" name="Export_pushButton">
           <property name="text">
-           <string>Export</string>
+           <string>Dışa Aktar</string>
           </property>
          </widget>
         </item>
@@ -179,7 +179,7 @@
            <string/>
           </property>
           <property name="text">
-           <string>components</string>
+           <string>ürünler</string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -192,7 +192,7 @@
            <string>View Application Notes</string>
           </property>
           <property name="text">
-           <string>app. notes</string>
+           <string>dosyalar</string>
           </property>
          </widget>
         </item>
@@ -247,16 +247,16 @@
      <x>0</x>
      <y>0</y>
      <width>657</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>&amp;File</string>
+     <string>&amp;Giriş</string>
     </property>
     <widget class="QMenu" name="menuAdd_new">
      <property name="title">
-      <string>Add new...</string>
+      <string>Yeni Giriş</string>
      </property>
      <addaction name="actionAddComponent"/>
      <addaction name="actionAddApplicationNote"/>
@@ -267,7 +267,7 @@
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
-     <string>Tools</string>
+     <string>Araçlar</string>
     </property>
     <addaction name="actionSettings"/>
    </widget>
@@ -283,12 +283,12 @@
   </widget>
   <action name="actionAbout">
    <property name="text">
-    <string>About</string>
+    <string>Hakkında</string>
    </property>
   </action>
   <action name="actionAddComponent">
    <property name="text">
-    <string>Component</string>
+    <string>Ürün</string>
    </property>
   </action>
   <action name="actionAddApplicationNote">
@@ -296,17 +296,17 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Application Note</string>
+    <string>Dosya</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>Çıkış</string>
    </property>
   </action>
   <action name="actionSettings">
    <property name="text">
-    <string>&amp;Settings</string>
+    <string>&amp;Ayarlar</string>
    </property>
   </action>
   <action name="actionViewComponents">

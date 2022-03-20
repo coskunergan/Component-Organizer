@@ -52,20 +52,20 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>6</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="page">
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
             <widget class="QGroupBox" name="groupBox">
              <property name="title">
-              <string>Layout</string>
+              <string>Görünüm</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
                <widget class="QCheckBox" name="saveLayout_checkBox">
                 <property name="text">
-                 <string>Save dimensions</string>
+                 <string>Pencere konumunu kaydet</string>
                 </property>
                </widget>
               </item>
@@ -75,20 +75,20 @@
            <item>
             <widget class="QGroupBox" name="groupBox_2">
              <property name="title">
-              <string>Components</string>
+              <string>Stoklar</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
                <widget class="QCheckBox" name="markLowStock_checkBox">
                 <property name="text">
-                 <string>Mark low stock components</string>
+                 <string>Düşük stokları işaretle</string>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QCheckBox" name="showContainers_checkBox">
                 <property name="text">
-                 <string>Show containers on table</string>
+                 <string>Konum bilgisini listede göster</string>
                 </property>
                </widget>
               </item>

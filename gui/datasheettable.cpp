@@ -31,9 +31,9 @@ DatasheetTable::DatasheetTable(QWidget *parent) :
     setColumnCount(4);
 
     QStringList headerLabels;
-    headerLabels.append(tr("Type"));
-    headerLabels.append(tr("Manufacturer"));
-    headerLabels.append(tr("Path"));
+    headerLabels.append(tr("Tip"));
+    headerLabels.append(tr("Gurup"));
+    headerLabels.append(tr("Adres"));
     headerLabels.append("");
 
     setHorizontalHeaderLabels(headerLabels);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>306</width>
-    <height>320</height>
+    <width>311</width>
+    <height>322</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,7 +34,7 @@
          </property>
          <widget class="QWidget" name="tab1">
           <attribute name="title">
-           <string>Main</string>
+           <string>Genel</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <property name="margin">
@@ -93,7 +93,7 @@
                   </font>
                  </property>
                  <property name="title">
-                  <string>Datasheets</string>
+                  <string>Dosya</string>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_2">
                   <item>
@@ -107,8 +107,11 @@
                         <bold>false</bold>
                        </font>
                       </property>
+                      <property name="frameShape">
+                       <enum>QFrame::NoFrame</enum>
+                      </property>
                       <property name="text">
-                       <string>(double click to view datasheet)</string>
+                       <string>(dosyayı görmek için çift tıklayınız)</string>
                       </property>
                      </widget>
                     </item>
@@ -157,7 +160,7 @@
                     </font>
                    </property>
                    <property name="title">
-                    <string>Stock</string>
+                    <string>Stok</string>
                    </property>
                    <layout class="QHBoxLayout" name="horizontalLayout">
                     <property name="sizeConstraint">
@@ -186,7 +189,7 @@
                       </font>
                      </property>
                      <property name="title">
-                      <string>Container</string>
+                      <string>Konum</string>
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_3">
                       <item>
@@ -223,7 +226,7 @@
                       </font>
                      </property>
                      <property name="title">
-                      <string>Labels</string>
+                      <string>Model</string>
                      </property>
                      <property name="checkable">
                       <bool>false</bool>
@@ -292,7 +295,7 @@
          </widget>
          <widget class="QWidget" name="tab2">
           <attribute name="title">
-           <string>Additional</string>
+           <string>Notlar</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_12">
            <property name="margin">

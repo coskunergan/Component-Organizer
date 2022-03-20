@@ -66,10 +66,10 @@ void ApplicationNoteDialog::setup()
     switch(m_mode)
     {
         case ApplicationNoteDialog::Add:
-            setWindowTitle(tr("Add Application Note"));
+            setWindowTitle(tr("Dosya ekle"));
             break;
         case ApplicationNoteDialog::Edit:
-            setWindowTitle(tr("Edit Application Note"));
+            setWindowTitle(tr("Dosyayi düzenle"));
             break;
     }
 
@@ -85,7 +85,7 @@ void ApplicationNoteDialog::accept()
 
     if(description.isEmpty())
     {
-        QMessageBox::critical(this, tr("Error"), tr("A description must be provided."),
+        QMessageBox::critical(this, tr("Hata"), tr("Özel bir açiklama giriniz."),
                               QMessageBox::Ok, QMessageBox::NoButton);
         return;
     }
