@@ -42,8 +42,8 @@ End_of_ID
     0.00     0.00     0.00     0.00 0A0000FFFF0001000000FFFFFFFF0000                    
     0.00     0.00     0.00     0.00 0A0000FFFF0001000000FFFFFFFF0000                    
 &B.QED                                                                                  
-End_of_BD 
-End_of_FD 
+End_of_BD
+End_of_FD
 &M   0=                                 
 FD1                                     
 Fiducial_1                              

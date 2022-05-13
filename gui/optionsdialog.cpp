@@ -1,6 +1,6 @@
 /*********************************************************************
 Component Organizer
-Copyright (C) Mário Ribeiro (mario.ribas@gmail.com)
+Copyright (C) Mï¿½rio Ribeiro (mario.ribas@gmail.com)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1349,6 +1349,10 @@ void OptionsDialog::SmtGenerateFile()
                 {
                     HeadShifter[j] = 0;
                 }
+                if(temp)
+                {
+                    temp--;
+                }
                 PrepareStr.append(QString::number(temp));//number of head
 
                 if(j < 10)
@@ -1373,10 +1377,9 @@ void OptionsDialog::SmtGenerateFile()
 
         TempStr = "                   \n";
         Result = PlaceDesignator_list.at(i).toLocal8Bit().constData();
+        Result.append(">>>");
+        Result.append(PlaceERP_list.at(i).toLocal8Bit().constData());
         TempStr.replace(0, Result.size(), Result);
-
-        Result = PlaceERP_list.at(i).toLocal8Bit().constData();
-        TempStr.replace(9, Result.size(), Result);
 
         PrepareStr.append(TempStr);
     }
