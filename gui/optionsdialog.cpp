@@ -1030,7 +1030,18 @@ void OptionsDialog::SmtGenerateFile()
         for(int row = 2; row <= 999; row++)
         {
             QAxObject *cell = sheet->querySubObject("Cells(int,int)", row, 1);
-            ERP_list.append(cell->dynamicCall("Value()").toString());
+            QString ERP_str = cell->dynamicCall("Value()").toString();
+            foreach(QString str, ERP_list)
+            {
+                if(str == ERP_str)
+                {
+                    ui->SmtInfo_textEdit->append(ERP_str + " ->ERP Number duplicated....");
+                    workbook->dynamicCall("Close()");
+                    excel->dynamicCall("Quit()");
+                    return;
+                }
+            }
+            ERP_list.append(ERP_str);
             cell = sheet->querySubObject("Cells(int,int)", row, 3);
             BomDesignetor_list.append(cell->dynamicCall("Value()").toString());
 
@@ -1184,7 +1195,8 @@ void OptionsDialog::SmtGenerateFile()
     {
         foreach(QString PlaceDesignator, PlaceDesignator_list)
         {
-            for(int i = 0; i < BomDesignetor_list.size(); ++i)
+            int i = 0;
+            for(; i < BomDesignetor_list.size(); ++i)
             {
                 Result = BomDesignetor_list.at(i).toLocal8Bit().constData();
                 QStringList ResultList = Result.split(',');
@@ -1195,6 +1207,7 @@ void OptionsDialog::SmtGenerateFile()
                     if(PlaceDesignator == str)
                     {
                         match = true;
+                        break;
                     }
                 }
                 if(match == true)
@@ -1268,8 +1281,8 @@ void OptionsDialog::SmtGenerateFile()
                         }
                     }
                     else
-                    {
-                        ui->SmtInfo_textEdit->setText(Result + "Does not match Designator BOM to PLACE File!");
+                     {
+                        ui->SmtInfo_textEdit->setText(Result + " Does not match Designator BOM to PLACE File!");
                         //return;
                     }
                     //Result.append("=");// test
@@ -1277,6 +1290,11 @@ void OptionsDialog::SmtGenerateFile()
                     //ui->SmtInfo_textEdit->append(Result);// test
                     break;
                 }
+            }
+            if(i == BomDesignetor_list.size())
+            {
+                ui->SmtInfo_textEdit->setText(PlaceDesignator + " -> Missing PLACE Designator on the BOM File!");
+                return;
             }
         }
     }

@@ -408,10 +408,11 @@ void MainWindow::updateXML()
 void MainWindow::about()
 {
     QString text;
+    const QString date = QDateTime::currentDateTime().toString("dd/MM/yyyy");
 
     text.append("Component Organizer " + CO_VERSION + "\n");
     text.append("\nBuilt with Qt " + QString(QT_VERSION_STR) + " ");
-    text.append("(" + QDateTime::currentDateTime().toString("dd/MM/yyyy") + ")");
+    text.append("(" + date + ")");
     text.append("\n");
     text.append("\nThis is OPEN SOURCE software as defined by the GPLv3 (or later). Feel free to contribute!");
     text.append("\n");
