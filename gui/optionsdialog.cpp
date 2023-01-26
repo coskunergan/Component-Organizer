@@ -1373,20 +1373,15 @@ void OptionsDialog::SmtGenerateFile()
                 }
                 PrepareStr.append(QString::number(temp));//number of head
 
-                if(j < 10)
+                if(j < 16)
                 {
                     PrepareStr.append("00FFFF0000000");
                 }
-                else if(j < 100)
+                else
                 {
                     PrepareStr.append("00FFFF000000");
                 }
-                else
-                {
-                    PrepareStr.append("00FFFF00000");
-                }
-                PrepareStr.append(QString::number(j));//number of profile
-
+                PrepareStr.append(QString::number(j, 16).toUpper());//number of profile
                 break;
             }
         }

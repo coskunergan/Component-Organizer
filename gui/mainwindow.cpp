@@ -408,7 +408,7 @@ void MainWindow::updateXML()
 void MainWindow::about()
 {
     QString text;
-    const QString date = QDateTime::currentDateTime().toString("dd/MM/yyyy");
+    const QString date = __DATE__;
 
     text.append("Component Organizer " + CO_VERSION + "\n");
     text.append("\nBuilt with Qt " + QString(QT_VERSION_STR) + " ");
